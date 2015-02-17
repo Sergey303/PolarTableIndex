@@ -51,6 +51,14 @@ namespace PolarTableIndex
             }
              table.Flush();
 
+             var entry = table.Root.Element(0);
+             for (int i = 0; i < maxIndex; i++)
+            {
+                long offset = (long) index.Root.Element(i).Field(1).Get();
+                entry.offset = offset;
+                Console.WriteLine(entry.Field(1).Get());
+            }
+           
             var random = new Random();
                  var name=random.Next(maxIndex).ToString();
 
@@ -71,11 +79,11 @@ namespace PolarTableIndex
 
         }
 
-        static PaEntry PrimarySeachByName(string name)
-        {      
-              return table.Root.BinarySearchFirst(entry => entry.Field(1).Get().ToString().CompareTo(name));
+        //static PaEntry PrimarySeachByName(string name)
+        //{      
+        //      return table.Root.BinarySearchFirst(entry => entry.Field(1).Get().ToString().CompareTo(name));
 
-        }
+        //}
         static PaEntry IndexSeachByName(string name)
         {
             var searchedHkey = hkey(name);
@@ -83,7 +91,7 @@ namespace PolarTableIndex
             var allHkeyRows = index.Root.BinarySearchAll(entry =>
             {
                 var readedHkey = (int) entry.Field(0).Get();
-                return readedHkey - searchedHkey;
+                return readedHkey > searchedHkey ? -1 : readedHkey==searchedHkey ? 0 :1;
             });
             PaEntry row0 = table.Root.Element(0);
             foreach (var offset in allHkeyRows.Select(entry => entry.Field(1).Get()).Cast<long>())
