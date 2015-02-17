@@ -16,5 +16,14 @@ namespace GoIndex
             this.table = table;
             this.keyProducer = keyProducer;
         }
+        public IEnumerable<PaEntry> GetAllByKey(Tkey key)
+        {
+            foreach (var en in table.Elements())
+            {
+                var k = keyProducer(en);
+                if (k.CompareTo(key) == 0) yield return en; 
+
+            }
+        } 
     }
 }
