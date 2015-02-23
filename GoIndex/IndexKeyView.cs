@@ -15,6 +15,8 @@ namespace GoIndex
         private Func<Tkey, int> halfProducer;
         // Эта булевская переменная управляет "половинчатостью". Если она истина, то используется полуиндекс
         private bool isHalf = false;
+        // Это признак того, что второе целое в индексном массиве используется. Можно было бы варьировать тип элемента индексного массива 
+        private bool isUsed = true;
         /// <summary>
         /// Конструктор ключевого индекса
         /// </summary>
@@ -36,6 +38,10 @@ namespace GoIndex
                 new NamedType("key", tp_key),
                 new NamedType("offset", new PType(PTypeEnumeration.longinteger))));
             if (halfProducer != null) isHalf = true;
+            else
+            {
+                if (q == typeof(string)) isUsed = false;  
+            }
             this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
         }
         public class HalfPair : IComparable
@@ -62,7 +68,7 @@ namespace GoIndex
                 return index.keyProducer(entry).CompareTo(key);
             }
         }
-        private long min, max;
+        //private long min, max;
         public void Build()
         {
             index_cell.Clear();
@@ -72,7 +78,7 @@ namespace GoIndex
             {
                 long offset = rec.offset;
                 var key = keyProducer(rec);
-                var key_hkey = isHalf ? (object)halfProducer(key) : (object)key;
+                var key_hkey = isHalf ? (object)halfProducer(key) : (isUsed? (object)key : (object)(-1));
                 object[] i_element = new object[] { key_hkey, offset };
                 index_cell.Root.AppendElement(i_element);
             }
@@ -91,6 +97,15 @@ namespace GoIndex
                     return new HalfPair(offset, (int)half_key, this);
                 });
             }
+            else if (!isHalf && !isUsed)
+            {
+                index_cell.Root.SortByKey<Tkey>((object v) =>
+                {
+                    long off = (long)(((object[])v)[1]);
+                    ptr.offset = off;
+                    return keyProducer(ptr);
+                });
+            }
             else
             {
                 index_cell.Root.SortByKey<Tkey>((object v) =>
@@ -105,44 +120,21 @@ namespace GoIndex
         {
             foreach (var v in index_cell.Root.ElementValues()) ;
         }
-        public PaEntry GetFirstByKey(Tkey key)
-        {
-            return GetFirstByKey(0, index_cell.Root.Count(), key);
-        }
-        public PaEntry GetFirstByKey(long start, long number, Tkey key)
-        {
-            if (table.Count() == 0) return PaEntry.Empty;
-            PaEntry entry = table.Element(0);
-            if (!isHalf)
-            {
-                var cand = index_cell.Root.BinarySearchFirst(start, number, ent => ((Tkey)ent.Field(0).Get()).CompareTo(key));
-                if (cand.IsEmpty) return PaEntry.Empty;
-                entry.offset = (long)cand.Field(1).Get();
-            }
-            else
-            {
-                int hkey = halfProducer(key);
-                var candidate = index_cell.Root.BinarySearchFirst(start, number, ent =>
-                {
-                    object[] pair = (object[])ent.Get();
-                    int hk = (int)pair[0];
-                    int cmp = hk.CompareTo(hkey);
-                    if (cmp != 0) return cmp;
-                    long off = (long)pair[1];
-                    entry.offset = off;
-                    return ((IComparable)keyProducer(entry)).CompareTo(key);
-                });
-                if (candidate.IsEmpty) return PaEntry.Empty;
-                entry.offset = (long)candidate.Field(1).Get();
-            }
-            return entry;
-        }
         public IEnumerable<PaEntry> GetAllByKey(long start, long number, Tkey key)
         {
             if (table.Count() == 0) return Enumerable.Empty<PaEntry>();
             PaEntry entry = table.Element(0);
             IEnumerable<PaEntry> candidates;
-            if (!isHalf)
+            if (!isHalf && !isUsed)
+            {
+                candidates = index_cell.Root.BinarySearchAll(start, number, ent =>
+                    {
+                        long off = (long)ent.Field(1).Get();
+                        entry.offset = off;
+                        return ((IComparable)keyProducer(entry)).CompareTo(key);
+                    });
+            }
+            else if (!isHalf)
             {
                 candidates = index_cell.Root.BinarySearchAll(start, number, ent => ((Tkey)ent.Field(0).Get()).CompareTo(key));
             }
@@ -161,7 +153,7 @@ namespace GoIndex
                 });
             }
             return candidates.Select(en => { entry.offset = (long)en.Field(1).Get(); return entry; })
-                //.Where(en => (bool)en.Field(0).Get() != true)
+                .Where(en => (bool)en.Field(0).Get() != true)
                 ;
         }
         public IEnumerable<PaEntry> GetAllByKey(Tkey key)
