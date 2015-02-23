@@ -45,6 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class2PolarType.cs" />
+    <Compile Include="DiapasonExt.cs" />
+    <Compile Include="FirstSimple.cs" />
+    <Compile Include="IndexWithExceptionalAndScale.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
