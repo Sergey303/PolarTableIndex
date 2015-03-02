@@ -30,7 +30,7 @@ namespace PolarTableIndex
         /// <summary>
         /// если диапазон короче, то поиск сканированием, если длинее, то используется бинарный поиск.
         /// </summary>
-        private static long maxDiapason4Binarysearch=100;
+        private static long maxDiapason4Binarysearch=100000;
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace PolarTableIndex
                     if (fullKeyAndOffset.Root.Count() <= position)
                     {
                         for (int i = 0; i < position - fullKeyAndOffset.Root.Count(); i++)
-                            fullKeyAndOffset.Root.AppendElement(new object[] {0, 0});
+                            fullKeyAndOffset.Root.AppendElement(new object[] {0, 0l});
                         fullKeyAndOffset.Root.AppendElement(new object[] {key, offset});
                     }
                     else
@@ -195,7 +195,7 @@ namespace PolarTableIndex
                 if (diapason.numb >= maxDiapason4Binarysearch)
                     return fullKeyAndOffset.Root.BinarySearchAll(diapason.start, diapason.numb, entry =>
                     {
-                        var l = (long) entry.Field(0).Get();
+                        var l = (int) entry.Field(0).Get();
                         return l > fullKey ? -1 : l == fullKey ? 0 : 1;
                     }).Select(entry => (long) entry.Field(1).Get());
                 else

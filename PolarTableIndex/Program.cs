@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using CommonRDF;
 using PolarDB;
 
 namespace PolarTableIndex
@@ -17,17 +19,33 @@ namespace PolarTableIndex
             "../../table.pac", false);
             table.Clear();
             table.Fill(new object[0]);
-            for (int i = 0; i < 2000; i++)
+            var r = new Random();
+            int j = 0;
+            for (int i = 0; i < 1000 * 1000; i++)
             {
-                for (int j = 0; j < i;j++)
-                    table.Root.AppendElement(new object[] { false, i.ToString(), i });
+                j = r.Next(10000);
+                //   for (int j = 0; j < i;j++)
+                    table.Root.AppendElement(new object[] { false, j.ToString(), j });
             }
 
             table.Flush();
-            var index=new IndexWithExceptionalAndScale("../../", table, o => (int) ((object[]) o)[2], fullkey => fullkey/1000, 1000);
-           // Console.WriteLine( string.Join(" ", index.GetRowsByKey(50).Select(entry => entry.Field(2).Get())));
-           // Console.WriteLine(string.Join(" ",index.GetRowsByKey(1001).Select(entry => entry.Field(2).Get())));
-            Console.WriteLine(string.Join(" ", index.GetRowsByDiapasonsOfKeys(-1001, 1).Select(entry => entry.Field(2).Get())));
+
+            IndexWithExceptionalAndScale index=null;
+            Perfomance.ComputeTime(() =>
+            {
+                index = new IndexWithExceptionalAndScale("../../", table, o => (int)((object[])o)[2], fullkey => fullkey / 1000, 1000);                
+            },"create ");
+            // Console.WriteLine( string.Join(" ", index.GetRowsByKey(50).Select(entry => entry.Field(2).Get())));
+            //PerformanceCounter c=new PerformanceCounter();
+            IEnumerable<object> tests = null;
+            Perfomance.ComputeTime(() =>
+            {
+                tests = index.GetRowsByKey(j).Select(entry => entry.Field(2).Get()).ToArray();
+            }, j+": ");
+
+            Console.WriteLine();
+            Console.WriteLine(string.Join(" ",tests));
+            // Console.WriteLine(string.Join(" ", index.GetRowsByDiapasonsOfKeys(-1001, 1).Select(entry => entry.Field(2).Get())));
         }
 
        
