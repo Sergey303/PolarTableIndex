@@ -14,7 +14,7 @@ namespace PolarTableIndex
             return ToPType(type);
         }
 
-        private static PType ToPType(Type type)
+        public static PType ToPType(Type type)
         {
             if (type == typeof (bool))
                 return new PType(PTypeEnumeration.boolean);
