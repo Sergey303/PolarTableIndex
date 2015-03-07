@@ -34,11 +34,20 @@ namespace PolarTableIndex
             return subIndex.GetAllByKey(start, number, hKeyProducer(key)).Where(entry =>key.Equals(fullKeyGenerator((object[]) entry.Get())));
         }
 
-      
+        public IEnumerable<object[]> GetAllReadedByKey(long start, long number, TStrKey key)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public IEnumerable<PaEntry> GetAllByKey(TStrKey key)
         {
             return subIndex.GetAllByKey(hKeyProducer(key)).Where(entry =>key.Equals(fullKeyGenerator((object[]) entry.Get()))); 
+        }
+
+        public IEnumerable<object[]> GetAllReadedByKey(TStrKey key)
+        {
+            return subIndex.GetAllReadedByKey(hKeyProducer(key)).Where(entry => key.Equals(fullKeyGenerator(entry))); 
         }
     }
  

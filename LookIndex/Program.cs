@@ -39,11 +39,11 @@ namespace LookIndex
 
 
 
-            n_index = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+            // n_index = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
           
             
             
-            // n_index = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(),PolarTableIndex.IndexConstructor.CreateInsideRecursive(path, table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+            n_index = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(),PolarTableIndex.IndexConstructor.CreateInsideRecursive(path, table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
             
             
             
@@ -51,9 +51,10 @@ namespace LookIndex
             sw.Stop();
             Console.WriteLine("Index ok. Duration={0}", sw.ElapsedMilliseconds);
 
-            foreach (var en in n_index.GetAllByKey((maxCount / 2).ToString()))
+            PType pType = table.Root.Element(0).Type;
+            foreach (var en in n_index.GetAllReadedByKey((maxCount / 2).ToString()))
             {
-                Console.WriteLine(en.Type.Interpret(en.Get()));
+                Console.WriteLine(pType.Interpret(en));
             }
             sw.Restart();
             Random rnd = new Random();
@@ -61,7 +62,7 @@ namespace LookIndex
             for (int i = 0; i < 1000; i++)
             {
                 int r = rnd.Next(maxCount * 2);
-                int c = n_index.GetAllByKey(r.ToString()).Count();
+                int c = n_index.GetAllReadedByKey(r.ToString()).Count();
                 if (c > 1) Console.WriteLine("Unexpected Error: {0}", c);
                 cnt += c;
             }
