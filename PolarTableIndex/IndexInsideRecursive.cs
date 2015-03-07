@@ -7,7 +7,7 @@ using PolarDB;
 
 namespace PolarTableIndex
 {
-    internal class IndexInsideRecursive  :PaCell  
+    public class IndexInsideRecursive  :PaCell 
     {
         private readonly DirectoryInfo dirPath;
         private readonly Type[] rowTypes;

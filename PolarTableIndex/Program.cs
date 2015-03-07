@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using CommonRDF;
+
 using PolarDB;
 
 namespace PolarTableIndex
@@ -32,7 +32,7 @@ namespace PolarTableIndex
             table.Flush();
 
             IndexInsideRecursive index=null;
-            Perfomance.ComputeTime(() =>
+           // Perfomance.ComputeTime(() =>
             {
                 var dir = new DirectoryInfo("../../index");
                 if(dir.Exists)
@@ -40,14 +40,14 @@ namespace PolarTableIndex
                 dir.Create();
                 index = new IndexInsideRecursive(dir, new []{typeof(int), typeof(bool)}, 1000);
                 index.Build(table.Root, new Func<object[], dynamic>[]{ o => (int)o[2], o => (bool)o[0]},  1000);                
-            },"create ");
+            }//,"create ");
             // Console.WriteLine( string.Join(" ", index.GetRowsByKey(50).Select(entry => entry.Field(2).Get())));
             //PerformanceCounter c=new PerformanceCounter();
             PaEntry[] tests = null;
-            Perfomance.ComputeTime(() =>
+           // Perfomance.ComputeTime(() =>
             {
                 tests = index.GetRowsByKey(new dynamic[]{j, false}).ToArray();
-            }, j+": ");
+            }//, j+": ");
 
             Console.WriteLine();
             Console.WriteLine(!tests.FirstOrDefault().IsEmpty? tests.FirstOrDefault().Get() : "");

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IIndex.cs" />
     <Compile Include="Index0.cs" />
     <Compile Include="IndexKeyView.cs" />
     <Compile Include="Program.cs" />
