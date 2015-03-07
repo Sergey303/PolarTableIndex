@@ -9,6 +9,8 @@ namespace IndexCommon
         void Build();
         void Warmup();
         IEnumerable<PaEntry> GetAllByKey(long start, long number, Tkey key);
+        IEnumerable<object[]> GetAllReadedByKey(long start, long number, Tkey key);
         IEnumerable<PaEntry> GetAllByKey(Tkey key);
+        IEnumerable<object[]> GetAllReadedByKey(Tkey key);
     }
 }

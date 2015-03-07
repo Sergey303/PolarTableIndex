@@ -301,18 +301,34 @@ namespace PolarTableIndex
             throw new NotImplementedException();
         }
 
-        public IEnumerable<PaEntry> GetAllByKey(TKey key)
+        public IEnumerable<object[]> GetAllReadedByKey(long start, long number, TKey key)
         {
+            throw new NotImplementedException();
+        }
 
+        public IEnumerable<PaEntry> GetAllByKey(TKey key)
+        {                        
             var entryRow = table.Element(0);
-            IEnumerable<PaEntry> allByKey = GetRowsOffsetsByKey(key).Select(
-                offset =>
+            IEnumerable<PaEntry> allByKey = GetRowsOffsetsByKey(key).Select(offset =>
                 {
                     entryRow.offset = offset;
                     return entryRow;
                 });
             if (testOnDeleted != null)
                 allByKey = allByKey.Where(entry => testOnDeleted((object[]) entry.Get()));
+            return allByKey;
+        }
+
+        public IEnumerable<object[]> GetAllReadedByKey(TKey key)
+        {
+            var entryRow = table.Element(0);
+            IEnumerable<object[]> allByKey = GetRowsOffsetsByKey(key).Select(offset =>
+            {
+                entryRow.offset = offset;
+                return entryRow;
+            }).Select(entry => (object[])entry.Get());
+            if (testOnDeleted != null)
+                allByKey = allByKey.Where(row => testOnDeleted(row));
             return allByKey;
         }
     }

@@ -125,41 +125,63 @@ namespace GoIndex
         {
             if (table.Count() == 0) return Enumerable.Empty<PaEntry>();
             PaEntry entry = table.Element(0);
-            IEnumerable<PaEntry> candidates;
-            if (!isHalf && !isUsed)
-            {
-                candidates = index_cell.Root.BinarySearchAll(start, number, ent =>
-                    {
-                        long off = (long)ent.Field(1).Get();
-                        entry.offset = off;
-                        return ((IComparable)keyProducer(entry)).CompareTo(key);
-                    });
-            }
-            else if (!isHalf)
-            {
-                candidates = index_cell.Root.BinarySearchAll(start, number, ent => ((Tkey)ent.Field(0).Get()).CompareTo(key));
-            }
-            else
-            {
-                int hkey = halfProducer(key);
-                candidates = index_cell.Root.BinarySearchAll(start, number, ent =>
-                {
-                    object[] pair = (object[])ent.Get();
-                    int hk = (int)pair[0];
-                    int cmp = hk.CompareTo(hkey);
-                    if (cmp != 0) return cmp;
-                    long off = (long)pair[1];
-                    entry.offset = off;
-                    return ((IComparable)keyProducer(entry)).CompareTo(key);
-                });
-            }
+            var candidates = GetAllCandidates(start, number, key, entry);
             return candidates.Select(en => { entry.offset = (long)en.Field(1).Get(); return entry; })
-                .Where(en => (bool)en.Field(0).Get() != true)
-                ;
+                .Where(en => (bool)en.Field(0).Get() != true);
         }
-        public IEnumerable<PaEntry> GetAllByKey(Tkey key)
+
+       private IEnumerable<PaEntry> GetAllCandidates(long start, long number, Tkey key, PaEntry entry)
+       {                 
+           IEnumerable<PaEntry> candidates;
+           if (!isHalf && !isUsed)
+           {
+               candidates = index_cell.Root.BinarySearchAll(start, number, ent =>
+               {
+                   long off = (long) ent.Field(1).Get();
+                   entry.offset = off;
+                   return ((IComparable) keyProducer(entry)).CompareTo(key);
+               });
+           }
+           else if (!isHalf)
+           {
+               candidates = index_cell.Root.BinarySearchAll(start, number, ent => ((Tkey) ent.Field(0).Get()).CompareTo(key));
+           }
+           else
+           {
+               int hkey = halfProducer(key);
+               candidates = index_cell.Root.BinarySearchAll(start, number, ent =>
+               {
+                   object[] pair = (object[]) ent.Get();
+                   int hk = (int) pair[0];
+                   int cmp = hk.CompareTo(hkey);
+                   if (cmp != 0) return cmp;
+                   long off = (long) pair[1];
+                   entry.offset = off;
+                   return ((IComparable) keyProducer(entry)).CompareTo(key);
+               });
+           }
+           return candidates;
+       }
+
+       public IEnumerable<object[]> GetAllReadedByKey(long start, long number, Tkey key)
+       {
+           if (table.Count() == 0) return Enumerable.Empty<object[]>();
+           PaEntry entry = table.Element(0);
+           var candidates = GetAllCandidates(start, number, key, entry);
+           return candidates.Select(en=>
+            { entry.offset = (long)en.Field(1).Get(); return entry; })
+            .Select(en => (object[])en.Get())
+               .Where(en => (bool)en[0] != true);
+       }
+
+       public IEnumerable<PaEntry> GetAllByKey(Tkey key)
         {
             return GetAllByKey(0, index_cell.Root.Count(), key);
         }
+
+       public IEnumerable<object[]> GetAllReadedByKey(Tkey key)
+       {
+           return GetAllReadedByKey(0, index_cell.Root.Count(), key);
+       }
     }
 }
