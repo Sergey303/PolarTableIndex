@@ -50,6 +50,7 @@ namespace PolarTableIndex
             }, j+": ");
 
             Console.WriteLine();
+            Console.WriteLine(!tests.FirstOrDefault().IsEmpty? tests.FirstOrDefault().Get() : "");
             Console.WriteLine(tests.Count());
         //    Console.WriteLine(string.Join(" ", tests.Select(entry => entry.Field(1).Get())));
             // Console.WriteLine(string.Join(" ", index.GetRowsByDiapasonsOfKeys(-1001, 1).Select(entry => entry.Field(2).Get())));
