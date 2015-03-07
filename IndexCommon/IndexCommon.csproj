@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PolarDB">
-      <HintPath>..\bin\Debug\PolarDB.dll</HintPath>
+      <HintPath>..\DLLs\PolarDB.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
