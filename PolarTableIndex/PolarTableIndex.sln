@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoIndex", "..\GoIndex\GoInd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolarTableIndexesLib", "..\PolarTableIndexesLib\PolarTableIndexesLib.csproj", "{CBE11DE0-E769-49FF-A92E-343B442C7612}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Index2", "..\Index2\Index2.csproj", "{7A3707DB-5D48-42B0-BE83-6613E88F1413}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LookIndex", "..\LookIndex\LookIndex.csproj", "{7A3707DB-5D48-42B0-BE83-6613E88F1413}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

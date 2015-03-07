@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Index2
+namespace LookIndex
 {
     class Program
     {
