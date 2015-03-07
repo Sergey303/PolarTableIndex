@@ -12,14 +12,14 @@ namespace LookIndex
         public static void Main()
         {
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            string path = "../../";
+            string path = "../../../Databases/";
             PaCell table;
             int maxCount = 1000000;
             table = new PaCell(new PTypeSequence(new PTypeRecord(
                 new NamedType("deleted", new PType(PTypeEnumeration.boolean)),
                 new NamedType("name", new PType(PTypeEnumeration.sstring)),
                 new NamedType("age", new PType(PTypeEnumeration.integer)))),
-                "../../table.pac", false);
+                path + "table.pac", false);
             Console.WriteLine("Start");
             sw.Restart();
             table.Clear();
