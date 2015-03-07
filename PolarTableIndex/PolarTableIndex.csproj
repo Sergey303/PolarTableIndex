@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HalfKeyIndex.cs" />
     <Compile Include="PaEntryRowsByOffsets.cs" />
     <Compile Include="Class2PolarType.cs" />
     <Compile Include="DiapasonExt.cs" />
@@ -60,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="IndexCommon\IndexCommon.csproj">
+      <Project>{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}</Project>
+      <Name>IndexCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

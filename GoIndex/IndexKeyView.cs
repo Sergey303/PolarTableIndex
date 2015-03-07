@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IndexCommon;
 using PolarDB;
 
 namespace GoIndex
 {
-    public class IndexKeyView<Tkey> where Tkey : IComparable
+   public class Index<Tkey> : IIndex<Tkey> where Tkey : IComparable
     {
         internal PaEntry table;
         private PaCell index_cell;
@@ -24,7 +25,7 @@ namespace GoIndex
         /// <param name="table">Последовательность (таблица) индексируемых элементов</param>
         /// <param name="keyProducer">Функция вычисления ключа по ссылке на элемент</param>
         /// <param name="halfProducer">Функция вычисления полуключа по ключу, null если не испльзуется</param>
-        public IndexKeyView(string indexName, PaEntry table, Func<PaEntry, Tkey> keyProducer,
+        public Index(string indexName, PaEntry table, Func<PaEntry, Tkey> keyProducer,
             Func<Tkey, int> halfProducer)
         {
             this.table = table;
@@ -48,8 +49,8 @@ namespace GoIndex
         {
             private long record_off;
             private int hkey;
-            private IndexKeyView<Tkey> index;
-            public HalfPair(long rec_off, int hkey, IndexKeyView<Tkey> index)
+            private Index<Tkey> index;
+            public HalfPair(long rec_off, int hkey, Index<Tkey> index)
             {
                 this.record_off = rec_off; this.hkey = hkey; this.index = index;
             }

@@ -31,22 +31,21 @@ namespace PolarTableIndex
 
             table.Flush();
 
-            IndexInsideRecursive index=null;
+            IndexInsideRecursive<int> index=null;
            // Perfomance.ComputeTime(() =>
             {
                 var dir = new DirectoryInfo("../../index");
                 if(dir.Exists)
                 dir.Delete(true);
                 dir.Create();
-                index = new IndexInsideRecursive(dir, new []{typeof(int), typeof(bool)}, 1000);
-                index.Build(table.Root, new Func<object[], dynamic>[]{ o => (int)o[2], o => (bool)o[0]},  1000);                
+                index = new IndexInsideRecursive<int>(dir,table.Root, 1000,  1000,o => (int)o[2]);                
             }//,"create ");
             // Console.WriteLine( string.Join(" ", index.GetRowsByKey(50).Select(entry => entry.Field(2).Get())));
             //PerformanceCounter c=new PerformanceCounter();
             PaEntry[] tests = null;
            // Perfomance.ComputeTime(() =>
             {
-                tests = index.GetRowsByKey(new dynamic[]{j, false}).ToArray();
+                tests = index.GetAllByKey(j).ToArray();
             }//, j+": ");
 
             Console.WriteLine();
