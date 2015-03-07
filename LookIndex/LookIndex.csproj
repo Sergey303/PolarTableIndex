@@ -55,10 +55,6 @@
       <Project>{FD503ABD-D15E-46E4-8B26-70A7FF6359C8}</Project>
       <Name>GoIndex</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PolarTableIndex\IndexCommon\IndexCommon.csproj">
-      <Project>{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}</Project>
-      <Name>IndexCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PolarTableIndex\PolarTableIndex.csproj">
       <Project>{38f8bab9-82d2-41c6-b3ce-0c59702de440}</Project>
       <Name>PolarTableIndex</Name>
