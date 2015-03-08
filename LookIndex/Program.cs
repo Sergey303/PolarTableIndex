@@ -39,11 +39,8 @@ namespace LookIndex
 
 
 
-            // n_index = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
-          
-            
-            
-            n_index = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(),PolarTableIndex.IndexConstructor.CreateInsideRecursive(path, table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+            n_index = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+            //n_index = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(),PolarTableIndex.IndexConstructor.CreateInsideRecursive(path, table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
             
             
             
@@ -68,6 +65,28 @@ namespace LookIndex
             }
             sw.Stop();
             Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
+
+
+            sw.Restart();
+            IIndex<int> a_index;
+
+            a_index = new GoIndex.Index<int>(path + "a_index", table.Root, en => (int)en.Field(2).Get(), null);
+            a_index.Build();
+            sw.Stop();
+            Console.WriteLine("int Index ok. Duration={0}", sw.ElapsedMilliseconds);
+
+            sw.Restart();
+            rnd = new Random();
+            cnt = 0;
+            for (int i = 0; i < 1000; i++)
+            {
+                int r = rnd.Next(maxCount * 2);
+                int c = a_index.GetAllReadedByKey(r).Count();
+                if (c > 1) Console.WriteLine("Unexpected Error: {0}", c);
+                cnt += c;
+            }
+            sw.Stop();
+            Console.WriteLine("1000 GetAllByKey INT ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
         }
     }
 }
