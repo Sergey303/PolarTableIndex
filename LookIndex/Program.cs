@@ -76,7 +76,7 @@ namespace LookIndex
             Func<T> randomKeyProducer) where T : IComparable
         {
             PType pType = table.Root.Element(0).Type;
-            foreach (var en in index.GetAllByKey(key))
+            foreach (var en in index.GetAllReadedByKey(key))
             {
                 Console.WriteLine(pType.Interpret(en));
             }
