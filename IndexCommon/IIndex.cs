@@ -4,6 +4,7 @@ using PolarDB;
 
 namespace IndexCommon
 {
+  
     public interface IIndex<Tkey>
     {
         void Build();
@@ -12,5 +13,7 @@ namespace IndexCommon
         IEnumerable<object[]> GetAllReadedByKey(long start, long number, Tkey key);
         IEnumerable<PaEntry> GetAllByKey(Tkey key);
         IEnumerable<object[]> GetAllReadedByKey(Tkey key);
+        PaEntry Table { get; }
+        Tkey KeyProducer(PaEntry entry);
     }
 }

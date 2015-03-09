@@ -49,6 +49,12 @@ namespace PolarTableIndex
         {
             return subIndex.GetAllReadedByKey(hKeyProducer(key)).Where(entry => key.Equals(fullKeyGenerator(entry))); 
         }
+
+        public PaEntry Table { get { return subIndex.Table; } }
+        public TStrKey KeyProducer(PaEntry entry)
+        {
+            throw new NotImplementedException();
+        }
     }
  
 

@@ -109,10 +109,6 @@ namespace PolarTableIndex
         }
         public void Build()
         {
-        
-       
-
-            
              Clear();
      
 
@@ -276,7 +272,7 @@ namespace PolarTableIndex
             //короткие диапазоны быстрее просканировать
             if (diapason.numb >= maxDiapason4Binarysearch)
                 return Root.BinarySearchAll(diapason.start, diapason.numb,
-                    entry => ((TKey)(((object[]) entry.Get())[0])).CompareTo(key))
+                    entry =>key .CompareTo(((TKey)(((object[]) entry.Get())[0]))))
                     .Select(entry => (long) entry.Field(1).Get());
             else
                 return Root.Elements(diapason.start, diapason.numb)
@@ -330,6 +326,12 @@ namespace PolarTableIndex
             if (testOnDeleted != null)
                 allByKey = allByKey.Where(row => testOnDeleted(row));
             return allByKey;
+        }
+
+        public PaEntry Table { get { return table; } }
+        public TKey KeyProducer(PaEntry entry)
+        {
+            throw new NotImplementedException();
         }
     }
 

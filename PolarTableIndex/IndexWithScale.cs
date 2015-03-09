@@ -1,73 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoIndex;
 using IndexCommon;
 using PolarDB;
 
-namespace GoIndex
+namespace PolarTableIndex
 {
-   public class Index<Tkey> : IIndex<Tkey> where Tkey : IComparable
+   public class IndexWithScale<Tkey> : IIndex<Tkey> where Tkey : IComparable
     {
         internal PaEntry table;
         private PaCell index_cell;
         internal Func<PaEntry, Tkey> keyProducer;
+        private Scale<Tkey> scale;
+
+       
+
         private Func<Tkey, int> halfProducer;
-        // Эта булевская переменная управляет "половинчатостью". Если она истина, то используется полуиндекс
+       private readonly bool isScaleUsed;
+       // Эта булевская переменная управляет "половинчатостью". Если она истина, то используется полуиндекс
         private bool isHalf = false;
         // Это признак того, что второе целое в индексном массиве используется. Можно было бы варьировать тип элемента индексного массива 
         private bool isUsed = true;
-        /// <summary>
-        /// Конструктор ключевого индекса
-        /// </summary>
-        /// <param name="indexName">Имя индекса, требуется для создания файла.</param>
-        /// <param name="table">Последовательность (таблица) индексируемых элементов</param>
-        /// <param name="keyProducer">Функция вычисления ключа по ссылке на элемент</param>
-        /// <param name="halfProducer">Функция вычисления полуключа по ключу, null если не испльзуется</param>
-        public Index(string indexName, PaEntry table, Func<PaEntry, Tkey> keyProducer,
-            Func<Tkey, int> halfProducer)
-        {
-            this.table = table;
-            this.keyProducer = keyProducer;
-            this.halfProducer = halfProducer;
-            PType tp_index;
-            var q = typeof(Tkey);
-            // Тип ключа или полуключа или длинный или целый
-            PType tp_key = q == typeof(long) ? new PType(PTypeEnumeration.longinteger) : new PType(PTypeEnumeration.integer);
-            tp_index = new PTypeSequence(new PTypeRecord(
-                new NamedType("key", tp_key),
-                new NamedType("offset", new PType(PTypeEnumeration.longinteger))));
-            if (halfProducer != null) isHalf = true;
-            else
-            {
-                if (q == typeof(string)) isUsed = false;  
-            }
-            this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
-        }
-        public class HalfPair : IComparable
-        {
-            private long record_off;
-            private int hkey;
-            private Index<Tkey> index;
-            public HalfPair(long rec_off, int hkey, Index<Tkey> index)
-            {
-                this.record_off = rec_off; this.hkey = hkey; this.index = index;
-            }
-            public int CompareTo(object pair)
-            {
-                if (!(pair is HalfPair)) throw new Exception("Exception 284401");
-                HalfPair pa = (HalfPair)pair;
-                int cmp = this.hkey.CompareTo(pa.hkey);
-                if (cmp != 0) return cmp;
-                if (index.table.Count() == 0) throw new Exception("Ex: 2943991");
-                // Определяем ключ 
-                PaEntry entry = index.table.Element(0);
-                entry.offset = pa.record_off;
-                Tkey key = index.keyProducer(entry);
-                entry.offset = record_off;
-                return index.keyProducer(entry).CompareTo(key);
-            }
-        }
-        //private long min, max;
+
+       /// <summary>
+       /// Конструктор ключевого индекса
+       /// </summary>
+       /// <param name="indexName">Имя индекса, требуется для создания файла.</param>
+       /// <param name="table">Последовательность (таблица) индексируемых элементов</param>
+       /// <param name="keyProducer">Функция вычисления ключа по ссылке на элемент</param>
+       /// <param name="halfProducer">Функция вычисления полуключа по ключу, null если не испльзуется</param>
+       public IndexWithScale(string indexName, PaEntry table, Func<PaEntry, Tkey> keyProducer,
+           Func<Tkey, int> halfProducer, bool isScaleUsed=false)
+       {
+           this.table = table;
+           this.keyProducer = keyProducer;
+           this.halfProducer = halfProducer;
+           this.isScaleUsed = isScaleUsed;
+           PType tp_index;
+           var q = typeof (Tkey);
+           // Тип ключа или полуключа или длинный или целый
+           PType tp_key = q == typeof (long)
+               ? new PType(PTypeEnumeration.longinteger)
+               : new PType(PTypeEnumeration.integer);
+           tp_index = new PTypeSequence(new PTypeRecord(
+               new NamedType("key", tp_key),
+               new NamedType("offset", new PType(PTypeEnumeration.longinteger))));
+           if (halfProducer != null) isHalf = true;
+           else
+           {
+               if (q == typeof (string)) isUsed = false;
+           }
+           this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
+
+           if(!isScaleUsed || index_cell.IsEmpty) return;
+           //создание диапазонов сканированием таблицы индексов 
+           var ptr = table.Element(0);
+
+           scale = new Scale<Tkey>(isHalf || isUsed
+               ? (Func<object[], Tkey>)(row => (Tkey) row[0])
+               : row =>
+               {
+                   long off1 = (long) (row[1]);
+                   ptr.offset = off1;
+                   return keyProducer(ptr);
+               }, index_cell);
+       }
+
+
+
+
+       //private long min, max;
         public void Build()
         {
             index_cell.Clear();
@@ -87,14 +90,16 @@ namespace GoIndex
             var ptr = table.Element(0);
             if (isHalf)
             {
-                index_cell.Root.SortByKey<HalfPair>((object v) =>
+                index_cell.Root.SortByKey<HalfPair<Tkey>>((object v) =>
                 {
                     object[] vv = (object[])v;
                     object half_key = vv[0];
                     long offset = (long)vv[1];
                     ptr.offset = offset;
-                    return new HalfPair(offset, (int)half_key, this);
-                });
+                    return new HalfPair<Tkey>(offset, (int)half_key, this);
+                });  
+           
+            scale = new Scale<Tkey>(row=>(Tkey) row[0], index_cell); 
             }
             else if (!isHalf && !isUsed)
             {
@@ -113,6 +118,7 @@ namespace GoIndex
                     return vv;
                 });
             }
+        
 
         }
         public void Warmup()
@@ -129,7 +135,7 @@ namespace GoIndex
         }
 
        private IEnumerable<PaEntry> GetAllCandidates(long start, long number, Tkey key, PaEntry entry)
-       {                 
+       {
            IEnumerable<PaEntry> candidates;
            if (!isHalf && !isUsed)
            {
@@ -174,18 +180,24 @@ namespace GoIndex
 
        public IEnumerable<PaEntry> GetAllByKey(Tkey key)
         {
-            return GetAllByKey(0, index_cell.Root.Count(), key);
+           if(!isScaleUsed)
+            return GetAllByKey(0,index_cell.Root.Count(), key);
+           var d = scale.Search(key);
+       return GetAllByKey(d.start,d.numb, key);
         }
 
        public IEnumerable<object[]> GetAllReadedByKey(Tkey key)
        {
-           return GetAllReadedByKey(0, index_cell.Root.Count(), key);
+           if (!isScaleUsed)
+               return GetAllReadedByKey(0, index_cell.Root.Count(), key);
+           var d = scale.Search(key);
+           return GetAllReadedByKey(d.start, d.numb, key);    
        }
 
-       public PaEntry Table { get; private set; }
+       public PaEntry Table { get { return table; } }
        public Tkey KeyProducer(PaEntry entry)
        {
-           throw new NotImplementedException();
+           return keyProducer(entry);
        }
     }
 }

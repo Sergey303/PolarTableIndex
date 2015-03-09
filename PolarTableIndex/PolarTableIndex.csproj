@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HalfKeyIndex.cs" />
+    <Compile Include="IndexWithScale.cs" />
     <Compile Include="PaEntryRowsByOffsets.cs" />
     <Compile Include="Class2PolarType.cs" />
     <Compile Include="DiapasonExt.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="IndexInsideRecursive.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scale.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
