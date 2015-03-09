@@ -36,7 +36,7 @@ namespace GoIndex
             sw.Restart();
             //Index0<string> n_index = new Index0<string>("", table.Root, en => (string)en.Field(1).Get());
             Index<string> n_index = new Index<string>(path + "n_index", table.Root,
-                en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+                en => (string)en[1], null /* key => key.GetHashCode()*/);
             n_index.Build();
             sw.Stop();
             Console.WriteLine("Index ok. Duration={0}", sw.ElapsedMilliseconds);

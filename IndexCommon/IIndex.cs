@@ -15,7 +15,5 @@ namespace IndexCommon
         IEnumerable<object[]> GetAllReadedByKey(Tkey key);
         PaEntry Table { get; }
         Tkey KeyProducer(PaEntry entry);
-        void Build2();
-        void Build3();
     }
 }

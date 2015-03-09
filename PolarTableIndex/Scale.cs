@@ -9,6 +9,7 @@ namespace PolarTableIndex
         private readonly Diapason[] diapasons;
         private readonly int minkey = int.MaxValue;
         private readonly int maxkey = 0;
+        private double differece;
         private const int diapasonsCount = 10000;
 
         public Scale(Func<object[],Tkey> keyFromIndexRow , PaCell indexCell)
@@ -20,6 +21,7 @@ minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get
             diapasons=new Diapason[diapasonsCount];
             FillDiapasonsNumb(indexCell);
             FillDiapasonsStart();
+            differece = (maxkey - minkey);
         }
 
         private void FillDiapasonsStart()
@@ -37,23 +39,30 @@ minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get
         /// </summary>
         /// <param name="combined">число приводимое к Int64 Convert.ToInt64</param>
         /// <returns></returns>
-        public int GetSubKey(Tkey combined)
+        public int GetSubKey(long x)
         {
-            return (int)((diapasonsCount - 1) * Convert.ToDouble(((Convert.ToInt32(combined) - minkey)) / (maxkey - minkey)));
+            var diffX = 1.0*(x - minkey);
+            var t = (diapasons.Length - 1)*diffX;
+            var d = (t/differece);
+            var i = (int) d;
+
+            return i;
         }
+
         public void FillDiapasonsNumb(PaCell indexCell)
         {
             indexCell.Root.Scan(o =>
             {
-                var subKey = GetSubKey(keyFromIndexRow((object[]) o));
-                diapasons[subKey] = diapasons[subKey].AddNumb(1);
+                throw new NotImplementedException();
+               // var subKey = GetSubKey(keyFromIndexRow((object[]) o));
+            //    diapasons[subKey] = diapasons[subKey].AddNumb(1);
                 return true;
             });
         }
 
         public Diapason Search(Tkey key)
         {
-            var subKey = GetSubKey(key);
+            var subKey = GetSubKey(Convert.ToInt64(key));
             if (subKey >= 0 && subKey < diapasonsCount)
                 return diapasons[subKey];
            return new Diapason();
