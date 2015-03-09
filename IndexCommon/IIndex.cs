@@ -16,5 +16,6 @@ namespace IndexCommon
         PaEntry Table { get; }
         Tkey KeyProducer(PaEntry entry);
         long Count();
+        void Build2();
     }
 }

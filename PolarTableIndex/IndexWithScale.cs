@@ -12,11 +12,15 @@ namespace PolarTableIndex
         private PaCell index_cell;
         internal Func<object[], Tkey> keyProducer;
         private Func<Tkey, int> halfProducer;
+        private readonly bool useScale;
         // Эта булевская переменная управляет "половинчатостью". Если она истина, то используется полуиндекс
         private bool isHalf = false;
         // Это признак того, что второе целое в индексном массиве используется. Можно было бы варьировать тип элемента индексного массива 
         private bool isUsed = true;  
-        Scale scale; 
+        Scale scale;
+        private Func<object[], long> func4Diapasons;
+        private PaEntry ptr;
+
         /// <summary>
         /// Конструктор ключевого индекса
         /// </summary>
@@ -25,27 +29,44 @@ namespace PolarTableIndex
         /// <param name="keyProducer">Функция вычисления ключа по ссылке на элемент</param>
         /// <param name="halfProducer">Функция вычисления полуключа по ключу, null если не испльзуется</param>
         public IndexWithScale(string indexName, PaEntry table, Func<object[], Tkey> keyProducer,
-            Func<Tkey, int> halfProducer)
+            Func<Tkey, int> halfProducer, bool useScale)
         {
             this.table = table;
+            ptr = table.Element(0);
             this.keyProducer = keyProducer;
             this.halfProducer = halfProducer;
+            this.useScale = useScale;
             PType tp_index;
-            var q = typeof(Tkey);
+            var q = typeof (Tkey);
             // Тип ключа или полуключа или длинный или целый
-            PType tp_key = q == typeof(long) ? new PType(PTypeEnumeration.longinteger) : new PType(PTypeEnumeration.integer);
+            PType tp_key = q == typeof (long)
+                ? new PType(PTypeEnumeration.longinteger)
+                : new PType(PTypeEnumeration.integer);
             tp_index = new PTypeSequence(new PTypeRecord(
                 new NamedType("key", tp_key),
                 new NamedType("offset", new PType(PTypeEnumeration.longinteger))));
             if (halfProducer != null) isHalf = true;
             else
             {
-                if (q == typeof(string)) isUsed = false;
+                if (q == typeof (string)) isUsed = false;
             }
             this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
             if (index_cell.IsEmpty) return;
-            scale = new Scale(objects => Convert.ToInt64(keyProducer(objects)), index_cell );
+
+            if (isHalf)
+                func4Diapasons = objects => Convert.ToInt64(objects[0]);
+            else if (!isHalf && !isUsed)
+                func4Diapasons = objects =>
+                {
+                    long off = (long) (objects[1]);
+                    ptr.offset = off;
+                    return Convert.ToInt64(keyProducer((object[]) ptr.Get()));
+                };
+            else
+               func4Diapasons=objects => Convert.ToInt64((objects)[0]);
+            scale = new Scale(func4Diapasons, index_cell);
         }
+
         public class HalfPair : IComparable, IComparer<Tkey>
         {
             private long record_off;
@@ -96,7 +117,6 @@ namespace PolarTableIndex
             index_cell.Flush();
             if (index_cell.Root.Count() == 0) return; // потому что следующая операция не пройдет
             // Сортировать index_cell по (полу)ключу, а если совпадает и полуключ определен, то находя истинный ключ по offset'у
-            var ptr = table.Element(0);
             if (isHalf)
             {
                 index_cell.Root.SortByKey<HalfPair>((object v) =>
@@ -107,7 +127,7 @@ namespace PolarTableIndex
                     ptr.offset = offset;
                     return new HalfPair(offset, (int)half_key, this);
                 });
-                scale = new Scale(objects => Convert.ToInt64(objects[0]), index_cell);
+                
             }
             else if (!isHalf && !isUsed)
             {
@@ -117,12 +137,7 @@ namespace PolarTableIndex
                     ptr.offset = off;
                     return keyProducer((object[])ptr.Get());
                 });
-                scale = new Scale(objects =>
-                {
-                    long off = (long)(objects[1]);
-                    ptr.offset = off;
-                    return Convert.ToInt64(keyProducer((object[])ptr.Get()));
-                }, index_cell);
+             
             }
             else
             {
@@ -131,21 +146,14 @@ namespace PolarTableIndex
                     var vv = (Tkey)((object[])v)[0];
                     return vv;
                 });
-                scale = new Scale(objects => Convert.ToInt64((objects)[0]), index_cell);
+               
             }
+            scale = new Scale(func4Diapasons, index_cell);
 
         }
 
 
-        class TkeyComparer : IComparer<Tkey>
-        {
-            public int Compare(Tkey x, Tkey y)
-            {
-                return x.CompareTo(y);
-            }
-        }
-
-        public void Warmup()
+           public void Warmup()
         {
             foreach (var v in index_cell.Root.ElementValues()) ;
         }
@@ -204,11 +212,21 @@ namespace PolarTableIndex
 
         public IEnumerable<PaEntry> GetAllByKey(Tkey key)
         {
+            if (useScale)
+            {
+                Diapason d = scale.Search(Convert.ToInt64(key));
+                return GetAllByKey(d.start, d.numb, key);
+            }
             return GetAllByKey(0, index_cell.Root.Count(), key);
         }
 
         public IEnumerable<object[]> GetAllReadedByKey(Tkey key)
         {
+            if (useScale)
+            {
+                Diapason d = scale.Search(Convert.ToInt64(key));
+                return GetAllReadedByKey(d.start, d.numb, key);
+            }
             return GetAllReadedByKey(0, index_cell.Root.Count(), key);
         }
 
@@ -219,6 +237,11 @@ namespace PolarTableIndex
         }
 
         public long Count()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Build2()
         {
             throw new NotImplementedException();
         }

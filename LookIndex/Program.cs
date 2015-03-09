@@ -31,20 +31,21 @@ namespace LookIndex
             Console.WriteLine("start string halfkey=GetHashCode GoIndex");
             Index<string> index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], key => key.GetHashCode());
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
-            if (build) { sw.Restart(); ((GoIndex.Index<string>)index).Build0(); sw.Stop(); Console.WriteLine("biuld0 " + sw.ElapsedMilliseconds); }
+            if (build) { sw.Restart(); ((GoIndex.Index<string>)index).Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
             RunTest<string>((IIndex<string>) index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
 
             Console.WriteLine("start string key GoIndex");
             index = new GoIndex.Index<string>(path + "n_index2", table.Root, en => (string)en[1], null /* key => key.GetHashCode()*/);
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+            if (build) { sw.Restart(); index.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
             RunTest<string>((IIndex<string>) index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
 
                 Console.WriteLine("start int key GoIndex");
            var index1 = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en[2], null /* key => key.GetHashCode()*/);
            if (build) { sw.Restart(); index1.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
-           if (build) { sw.Restart(); ((GoIndex.Index<int>)index1).Build0(); sw.Stop(); Console.WriteLine("biuld0 " + sw.ElapsedMilliseconds); }
+           if (build) { sw.Restart(); ((GoIndex.Index<int>)index1).Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
 
 
            RunTest<int>(index1, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));  
