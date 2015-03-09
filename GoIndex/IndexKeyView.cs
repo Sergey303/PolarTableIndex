@@ -120,6 +120,57 @@ namespace GoIndex
             }
 
         }
+        public void Build3()
+        {
+            index_cell.Clear();
+            index_cell.Fill(new object[0]);
+            //bool firsttime = true;   
+            int i = 0;
+            table.Scan((offset, o) =>
+            {
+                var row = (object[]) o;
+                if (row[0].Equals(true)) return true;
+
+                var key = (Tkey)Convert.ChangeType(i++.ToString(),(typeof (Tkey)));//keyProducer(rec);     ///
+                var key_hkey = isHalf ? (object) halfProducer(key) : (isUsed ? (object) key : (object) (-1));
+                object[] i_element = new object[] {key_hkey, offset};
+                index_cell.Root.AppendElement(i_element);
+                return true;
+            });
+            index_cell.Flush();
+            if (index_cell.Root.Count() == 0) return; // потому что следующая операция не пройдет
+            // Сортировать index_cell по (полу)ключу, а если совпадает и полуключ определен, то находя истинный ключ по offset'у
+            var ptr = table.Element(0);
+            if (isHalf)
+            {
+                index_cell.Root.SortByKey<HalfPair>((object v) =>
+                {
+                    object[] vv = (object[])v;
+                    object half_key = vv[0];
+                    long offset = (long)vv[1];
+                    ptr.offset = offset;
+                    return new HalfPair(offset, (int)half_key, this);
+                });
+            }
+            else if (!isHalf && !isUsed)
+            {
+                index_cell.Root.SortByKey<Tkey>((object v) =>
+                {
+                    long off = (long)(((object[])v)[1]);
+                    ptr.offset = off;
+                    return keyProducer(ptr);
+                });
+            }
+            else
+            {
+                index_cell.Root.SortByKey<Tkey>((object v) =>
+                {
+                    var vv = (Tkey)(((object[])v)[0]);
+                    return vv;
+                });
+            }
+
+        }
         public void Build2()
         {
             index_cell.Clear();

@@ -338,6 +338,11 @@ namespace PolarTableIndex
         {
             throw new NotImplementedException();
         }
+
+        public void Build3()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class IndexConstructor

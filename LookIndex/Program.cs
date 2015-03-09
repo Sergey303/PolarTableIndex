@@ -5,7 +5,7 @@ using System.Linq;
 
 using IndexCommon;
 using PolarDB;
-
+using PolarTableIndex;
 
 
 namespace LookIndex
@@ -28,13 +28,14 @@ namespace LookIndex
             Console.WriteLine("Load ok. Duration={0}", sw.ElapsedMilliseconds);
 
             sw.Restart();
-
+             
             Console.WriteLine("start string halfkey=GetHashCode GoIndex");
             IIndex<string> index_s = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode());
-            if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
             if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
-           RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+            if (build) { sw.Restart(); index_s.Build3(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+            RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
+          
            Console.WriteLine("start string key GoIndex");
            index_s = new GoIndex.Index<string>(path + "n_index2", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
            if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
@@ -120,8 +121,8 @@ namespace LookIndex
             for (int i = 0; i < maxCount; i++)
             {
                 
-              //  table.Root.AppendElement(new object[] {false, i.ToString(), i == maxCount/2 ? -1 : i});
-                table.Root.AppendElement(new object[] { false, rnd.Next().ToString(), rnd.Next() });
+                table.Root.AppendElement(new object[] {false, i.ToString(), i == maxCount/2 ? -1 : i});
+               // table.Root.AppendElement(new object[] { false, rnd.Next().ToString(), rnd.Next() });
             }
 
             table.Flush();
