@@ -22,6 +22,7 @@ namespace LookIndex
             sw = new Stopwatch();
             string path = "../../../Databases/";
             int maxCount = 1000000;
+            bool build = true;
             table = CreatePaCell(path, sw,  maxCount);
             sw.Stop();
             Console.WriteLine("Load ok. Duration={0}", sw.ElapsedMilliseconds);
@@ -30,12 +31,12 @@ namespace LookIndex
 
             Console.WriteLine("start string half key GoIndex");
            IIndex<string> index_s = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
-           index_s.Build();
+           if (build) index_s.Build();
         //   RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
 
            Console.WriteLine("start string half key IndexWithScale");
           index_s = new PolarTableIndex.IndexWithScale<string>(path + "n_index with scale", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode(), true);
-           index_s.Build();
+          if (build) index_s.Build();
            RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
             //Console.WriteLine("start string half key HalfKeyForIndex InsideRecursive");
             //index_s = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(), PolarTableIndex.IndexConstructor.CreateInsideRecursive(path + "strings", table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
@@ -44,7 +45,7 @@ namespace LookIndex
 
             Console.WriteLine("start int key GoIndex");
            IIndex<int> index = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en.Field(2).Get(), null /* key => key.GetHashCode()*/);
-            index.Build();
+           if (build) index.Build();
             RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
 
             //Console.WriteLine("start int InsideRecursive");
@@ -54,7 +55,7 @@ namespace LookIndex
             
             Console.WriteLine("start key = int+ str.gethash GoIndex");
             index = new GoIndex.Index<int>(path + "n_index_ints2", table.Root, en => (int)en.Field(2).Get() + ((string)en.Field(1).Get()).GetHashCode(), null /* key => key.GetHashCode()*/);
-            index.Build();
+            if (build) index.Build();
             RunTest(index, row => (int)row[2]+row[1].ToString().GetHashCode(), (maxCount / 2), () => rnd.Next(maxCount * 2));
             
             //Console.WriteLine("start key = int+ str.gethash InsideRecursive");
@@ -68,7 +69,8 @@ namespace LookIndex
 
         }
 
-        private static void RunTest<T>(IIndex<T> index, Func<object[], T> getKeyFromRow, T key, Func<T> randomKeyProducer) where T : IComparable
+        private static void RunTest<T>(IIndex<T> index, Func<object[], T> getKeyFromRow, T key,
+            Func<T> randomKeyProducer) where T : IComparable
         {
             PType pType = table.Root.Element(0).Type;
             foreach (var en in index.GetAllReadedByKey(key))
@@ -87,22 +89,19 @@ namespace LookIndex
             sw.Stop();
             Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
 
-            bool makeaindex = false;
-
-            if (makeaindex)
-            {
-            sw.Restart();
-            foreach (PaEntry entry in table.Root.Elements())
-            {
-                object[] row = (object[])entry.Get();
-                T k = getKeyFromRow(row);
-                IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
-                if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i])))) throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
+                sw.Restart();
+                foreach (PaEntry entry in table.Root.Elements())
+                {
+                    object[] row = (object[]) entry.Get();
+                    T k = getKeyFromRow(row);
+                    IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
+                    if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i]))))
+                        throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
+                }
+                sw.Stop();
+                Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
+                    sw.ElapsedMilliseconds, cnt);
             }
-            sw.Stop();
-            Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
-        }
-
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {
             PaCell table;
@@ -126,4 +125,4 @@ namespace LookIndex
         }
     }
 }
-}
+
