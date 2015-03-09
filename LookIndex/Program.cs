@@ -89,18 +89,18 @@ namespace LookIndex
             sw.Stop();
             Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
 
-                sw.Restart();
-                foreach (PaEntry entry in table.Root.Elements())
-                {
-                    object[] row = (object[]) entry.Get();
-                    T k = getKeyFromRow(row);
-                    IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
-                    if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i]))))
-                        throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
-                }
-                sw.Stop();
-                Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
-                    sw.ElapsedMilliseconds, cnt);
+                //sw.Restart();
+                //foreach (PaEntry entry in table.Root.Elements())
+                //{
+                //    object[] row = (object[]) entry.Get();
+                //    T k = getKeyFromRow(row);
+                //    IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
+                //    if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i]))))
+                //        throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
+                //}
+                //sw.Stop();
+                //Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
+                //    sw.ElapsedMilliseconds, cnt);
             }
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {
