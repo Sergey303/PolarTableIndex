@@ -51,7 +51,7 @@ namespace LookIndex
             //index = PolarTableIndex.IndexConstructor.CreateInsideRecursive<int>(path + "ints1", table.Root, row => (int)row[2], row => (bool)row[0] != true);
             //index.Build();
             //RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
-          
+            
             Console.WriteLine("start key = int+ str.gethash GoIndex");
             index = new GoIndex.Index<int>(path + "n_index_ints2", table.Root, en => (int)en.Field(2).Get() + ((string)en.Field(1).Get()).GetHashCode(), null /* key => key.GetHashCode()*/);
             index.Build();
@@ -61,7 +61,7 @@ namespace LookIndex
             //index = PolarTableIndex.IndexConstructor.CreateInsideRecursive<int>(path + "ints2", table.Root, row => (int)row[2] + ((string)row[1]).GetHashCode(), row => (bool)row[0] != true);
             //index.Build();
             //RunTest(index, row => (int)row[2] + row[1].ToString().GetHashCode(), (maxCount / 2), () => rnd.Next(maxCount * 2));
-
+            
             sw.Stop();
             Console.WriteLine("Index ok. Duration={0}", sw.ElapsedMilliseconds);
 
@@ -85,8 +85,12 @@ namespace LookIndex
                 cnt += c;
             }
             sw.Stop();
-            Console.WriteLine("1000 GetAllReadedByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
+            Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
 
+            bool makeaindex = false;
+
+            if (makeaindex)
+            {
             sw.Restart();
             foreach (PaEntry entry in table.Root.Elements())
             {
@@ -102,7 +106,7 @@ namespace LookIndex
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {
             PaCell table;
-         
+
             table = new PaCell(new PTypeSequence(new PTypeRecord(
                 new NamedType("deleted", new PType(PTypeEnumeration.boolean)),
                 new NamedType("name", new PType(PTypeEnumeration.sstring)),
@@ -121,4 +125,5 @@ namespace LookIndex
             return table;
         }
     }
+}
 }
