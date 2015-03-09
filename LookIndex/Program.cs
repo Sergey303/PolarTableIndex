@@ -51,12 +51,12 @@ namespace LookIndex
             //index = PolarTableIndex.IndexConstructor.CreateInsideRecursive<int>(path + "ints1", table.Root, row => (int)row[2], row => (bool)row[0] != true);
             //index.Build();
             //RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
-
+          
             Console.WriteLine("start key = int+ str.gethash GoIndex");
             index = new GoIndex.Index<int>(path + "n_index_ints2", table.Root, en => (int)en.Field(2).Get() + ((string)en.Field(1).Get()).GetHashCode(), null /* key => key.GetHashCode()*/);
             index.Build();
             RunTest(index, row => (int)row[2]+row[1].ToString().GetHashCode(), (maxCount / 2), () => rnd.Next(maxCount * 2));
-
+            
             //Console.WriteLine("start key = int+ str.gethash InsideRecursive");
             //index = PolarTableIndex.IndexConstructor.CreateInsideRecursive<int>(path + "ints2", table.Root, row => (int)row[2] + ((string)row[1]).GetHashCode(), row => (bool)row[0] != true);
             //index.Build();

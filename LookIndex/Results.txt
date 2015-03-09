@@ -1,0 +1,25 @@
+﻿Результаты измерений
+
+========== Домашний компьютер ==========
+== GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+Загрузка 773
+Индексирование 23232
+1000 GetAllByKey 337
+== GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), key => key.GetHashCode());
+Загрузка 758
+Индексирование 16150
+1000 GetAllByKey 168
+INT== GoIndex.Index<int>(path + "a_index", table.Root,  en => (int)en.Field(2).Get(), null /*key => key.GetHashCode()*/);
+Индексирование 14129
+1000 GetAllByKey INT 162
+
+=========== Рабочий компьютер ===========
+Загрузка 426
+Строковый индекс 9336
+1000 выборок 124
+Целый индекс 5334
+1000 выборок 59
+
+
+
+

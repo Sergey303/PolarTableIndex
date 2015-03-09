@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Concepts.txt" />
     <Content Include="Results.txt" />
   </ItemGroup>
   <ItemGroup>
