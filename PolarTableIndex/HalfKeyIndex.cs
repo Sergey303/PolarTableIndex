@@ -55,6 +55,11 @@ namespace PolarTableIndex
         {
             throw new NotImplementedException();
         }
+
+        public void Build2()
+        {
+            throw new NotImplementedException();
+        }
     }
  
 

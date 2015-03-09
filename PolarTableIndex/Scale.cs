@@ -7,15 +7,16 @@ namespace PolarTableIndex
     {
         private readonly Func<object[], Tkey> keyFromIndexRow;
         private readonly Diapason[] diapasons;
-        private readonly long minCombinedkey = int.MaxValue;
-        private readonly long maxCombinedkey = 0;
+        private readonly int minkey = int.MaxValue;
+        private readonly int maxkey = 0;
         private const int diapasonsCount = 10000;
 
         public Scale(Func<object[],Tkey> keyFromIndexRow , PaCell indexCell)
         {
             this.keyFromIndexRow = keyFromIndexRow;
-minCombinedkey = Convert.ToInt64(keyFromIndexRow((object[])indexCell.Root.Element(0).Get()));
-            maxCombinedkey = Convert.ToInt64(keyFromIndexRow((object[])indexCell.Root.Element(indexCell.Root.Count() - 1).Get()));
+minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get()));
+            maxkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(indexCell.Root.Count() - 1).Get()));
+            
             diapasons=new Diapason[diapasonsCount];
             FillDiapasonsNumb(indexCell);
             FillDiapasonsStart();
@@ -38,7 +39,7 @@ minCombinedkey = Convert.ToInt64(keyFromIndexRow((object[])indexCell.Root.Elemen
         /// <returns></returns>
         public int GetSubKey(Tkey combined)
         {
-            return (int)((diapasonsCount - 1) * Convert.ToDouble(((Convert.ToInt64(combined) - minCombinedkey)) / (maxCombinedkey - minCombinedkey)));
+            return (int)((diapasonsCount - 1) * Convert.ToDouble(((Convert.ToInt32(combined) - minkey)) / (maxkey - minkey)));
         }
         public void FillDiapasonsNumb(PaCell indexCell)
         {

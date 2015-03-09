@@ -199,5 +199,10 @@ namespace PolarTableIndex
        {
            return keyProducer(entry);
        }
+
+       public void Build2()
+       {
+           throw new NotImplementedException();
+       }
     }
 }

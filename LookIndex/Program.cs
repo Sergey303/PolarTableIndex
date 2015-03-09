@@ -29,9 +29,19 @@ namespace LookIndex
 
             sw.Restart();
 
-            Console.WriteLine("start string half key GoIndex");
-           IIndex<string> index_s = new GoIndex.Index<string>(path + "n_index", table.Root,  en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
-           if (build) index_s.Build();
+            Console.WriteLine("start string halfkey=GetHashCode GoIndex");
+            IIndex<string> index_s = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode());
+            if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+            if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+           RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+
+           Console.WriteLine("start string key GoIndex");
+           index_s = new GoIndex.Index<string>(path + "n_index2", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
+           if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+           if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+           RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+
+
         //   RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
 
           // Console.WriteLine("start string half key IndexWithScale");
@@ -45,7 +55,9 @@ namespace LookIndex
 
             Console.WriteLine("start int key GoIndex");
            IIndex<int> index = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en.Field(2).Get(), null /* key => key.GetHashCode()*/);
-           if (build) index.Build();
+           if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+           if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+         
             RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
 
             //Console.WriteLine("start int InsideRecursive");
@@ -53,18 +65,8 @@ namespace LookIndex
             //index.Build();
             //RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
             
-            Console.WriteLine("start key = int+ str.gethash GoIndex");
-            index = new GoIndex.Index<int>(path + "n_index_ints2", table.Root, en => (int)en.Field(2).Get() + ((string)en.Field(1).Get()).GetHashCode(), null /* key => key.GetHashCode()*/);
-            if (build) index.Build();
-            RunTest(index, row => (int)row[2]+row[1].ToString().GetHashCode(), (maxCount / 2), () => rnd.Next(maxCount * 2));
-            
-            //Console.WriteLine("start key = int+ str.gethash InsideRecursive");
-            //index = PolarTableIndex.IndexConstructor.CreateInsideRecursive<int>(path + "ints2", table.Root, row => (int)row[2] + ((string)row[1]).GetHashCode(), row => (bool)row[0] != true);
-            //index.Build();
-            //RunTest(index, row => (int)row[2] + row[1].ToString().GetHashCode(), (maxCount / 2), () => rnd.Next(maxCount * 2));
-            
-            sw.Stop();
-            Console.WriteLine("Index ok. Duration={0}", sw.ElapsedMilliseconds);
+
+      
 
 
         }
