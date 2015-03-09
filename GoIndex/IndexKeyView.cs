@@ -118,6 +118,8 @@ namespace GoIndex
                     return vv;
                 });
             }
+            var count = index_cell.Root.Count();
+             count = index_cell.Root.Count();
 
         }
         public void Build()
@@ -245,13 +247,19 @@ namespace GoIndex
 
        public IEnumerable<object[]> GetAllReadedByKey(Tkey key)
        {
-           return GetAllReadedByKey(0, index_cell.Root.Count(), key);
+           var number = index_cell.Root.Count();
+           return GetAllReadedByKey(0, number, key);
        }
 
        public PaEntry Table { get; private set; }
        public Tkey KeyProducer(PaEntry entry)
        {
            throw new NotImplementedException();
+       }
+
+       public long Count()
+       {
+           return index_cell.Root.Count();
        }
     }
 }

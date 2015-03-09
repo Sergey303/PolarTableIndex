@@ -3,16 +3,16 @@ using PolarDB;
 
 namespace PolarTableIndex
 {
-    public class Scale<Tkey> where Tkey : IComparable
+    public class Scale
     {
-        private readonly Func<object[], Tkey> keyFromIndexRow;
+        private readonly Func<object[], long> keyFromIndexRow;
         private readonly Diapason[] diapasons;
         private readonly int minkey = int.MaxValue;
         private readonly int maxkey = 0;
         private double differece;
         private const int diapasonsCount = 10000;
 
-        public Scale(Func<object[],Tkey> keyFromIndexRow , PaCell indexCell)
+        public Scale(Func<object[],long> keyFromIndexRow , PaCell indexCell)
         {
             this.keyFromIndexRow = keyFromIndexRow;
 minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get()));
@@ -53,16 +53,16 @@ minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get
         {
             indexCell.Root.Scan(o =>
             {
-                throw new NotImplementedException();
-               // var subKey = GetSubKey(keyFromIndexRow((object[]) o));
-            //    diapasons[subKey] = diapasons[subKey].AddNumb(1);
+               
+               var subKey = GetSubKey(Convert.ToInt64(keyFromIndexRow((object[]) o)));
+               diapasons[subKey] = diapasons[subKey].AddNumb(1);
                 return true;
             });
         }
 
-        public Diapason Search(Tkey key)
+        public Diapason Search(long key)
         {
-            var subKey = GetSubKey(Convert.ToInt64(key));
+            var subKey = GetSubKey(key);
             if (subKey >= 0 && subKey < diapasonsCount)
                 return diapasons[subKey];
            return new Diapason();

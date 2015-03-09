@@ -15,5 +15,6 @@ namespace IndexCommon
         IEnumerable<object[]> GetAllReadedByKey(Tkey key);
         PaEntry Table { get; }
         Tkey KeyProducer(PaEntry entry);
+        long Count();
     }
 }
