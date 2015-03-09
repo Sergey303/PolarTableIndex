@@ -32,12 +32,23 @@ namespace LookIndex
             Console.WriteLine("start string halfkey=GetHashCode index_withScale");
             IIndex<string> index;
 
-            index = new IndexWithScale<string>(path + "index_withScale", table.Root, en => (string) en[1],
+            index = new IndexWithScale<string>(path + "index_withScale1", table.Root, en => (string) en[1],
                 key => key.GetHashCode(), true);
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
             RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
-            return; 
+            Console.WriteLine("start string key index_withScale");
+            index = new IndexWithScale<string>(path + "index_withScale2", table.Root, en => (string)en[1],
+                null, true);
+            if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+            RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+
+
+            Console.WriteLine("start int key index_withScale");
+            IIndex<int> index1 = new IndexWithScale<int>(path + "index_withScale3", table.Root, en => (int)en[2], null, true);
+            if (build) { sw.Restart(); index1.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+             RunTest<int>(index1, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));  
+             return;
             index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], key => key.GetHashCode());
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
             if (build) { sw.Restart(); ((GoIndex.Index<string>)index).Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
@@ -52,7 +63,7 @@ namespace LookIndex
 
 
                 Console.WriteLine("start int key GoIndex");
-           var index1 = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en[2], null /* key => key.GetHashCode()*/);
+            index1 = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en[2], null /* key => key.GetHashCode()*/);
            if (build) { sw.Restart(); index1.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
            if (build) { sw.Restart(); ((GoIndex.Index<int>)index1).Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
 
@@ -65,21 +76,21 @@ namespace LookIndex
             Func<T> randomKeyProducer) where T : IComparable
         {
             PType pType = table.Root.Element(0).Type;
-            foreach (var en in index.GetAllReadedByKey(key))
+            foreach (var en in index.GetAllByKey(key))
             {
                 Console.WriteLine(pType.Interpret(en));
             }
-            sw.Restart();
+            //sw.Restart();
 
-            int cnt = 0;
-            for (int i = 0; i < 1000; i++)
-            {
-                int c = index.GetAllReadedByKey(randomKeyProducer()).Count();
-                if (c > 1) Console.WriteLine("Unexpected Error: {0}", c);
-                cnt += c;
-            }
-            sw.Stop();
-            Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
+            //int cnt = 0;
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    int c = index.GetAllReadedByKey(randomKeyProducer()).Count();
+            //    if (c > 1) Console.WriteLine("Unexpected Error: {0}", c);
+            //    cnt += c;
+            //}
+            //sw.Stop();
+            //Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
 
             sw.Restart();
             foreach (PaEntry entry in table.Root.Elements())
@@ -91,8 +102,8 @@ namespace LookIndex
                     throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
             }
             sw.Stop();
-            Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
-                sw.ElapsedMilliseconds, cnt);
+            Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} ",
+                sw.ElapsedMilliseconds);
             }
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {

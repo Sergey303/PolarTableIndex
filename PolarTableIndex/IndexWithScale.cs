@@ -225,7 +225,11 @@ namespace PolarTableIndex
         {
             if (useScale)
             {
-                Diapason d = scale.Search(Convert.ToInt64((int)(isHalf ? (object)halfProducer(key) : key)));
+                Diapason d = scale.Search(Convert.ToInt64(isHalf ? (object)halfProducer(key) : key));
+                if (d.numb == 0)
+                {
+                    
+                }
                 return GetAllReadedByKey(d.start, d.numb, key);
             }
             return GetAllReadedByKey(0, index_cell.Root.Count(), key);
