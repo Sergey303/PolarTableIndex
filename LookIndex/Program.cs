@@ -5,6 +5,7 @@ using System.Linq;
 using GoIndex;
 using IndexCommon;
 using PolarDB;
+using PolarTableIndex;
 
 
 namespace LookIndex
@@ -28,8 +29,16 @@ namespace LookIndex
 
             sw.Restart();
 
-            Console.WriteLine("start string halfkey=GetHashCode GoIndex");
-            Index<string> index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], key => key.GetHashCode());
+            Console.WriteLine("start string halfkey=GetHashCode index_withScale");
+            IIndex<string> index;
+
+            index = new IndexWithScale<string>(path + "index_withScale", table.Root, en => (string) en[1],
+                key => key.GetHashCode(), true);
+            if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+            RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+
+            return; 
+            index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], key => key.GetHashCode());
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
             if (build) { sw.Restart(); ((GoIndex.Index<string>)index).Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
             RunTest<string>((IIndex<string>) index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
@@ -72,18 +81,18 @@ namespace LookIndex
             sw.Stop();
             Console.WriteLine("1000 GetAllByKey ok. Duration={0} cnt={1}", sw.ElapsedMilliseconds, cnt);
 
-            //sw.Restart();
-            //foreach (PaEntry entry in table.Root.Elements())
-            //{
-            //    object[] row = (object[])entry.Get();
-            //    T k = getKeyFromRow(row);
-            //    IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
-            //    if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i]))))
-            //        throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
-            //}
-            //sw.Stop();
-            //Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
-            //    sw.ElapsedMilliseconds, cnt);
+            sw.Restart();
+            foreach (PaEntry entry in table.Root.Elements())
+            {
+                object[] row = (object[])entry.Get();
+                T k = getKeyFromRow(row);
+                IEnumerable<object[]> rows = index.GetAllReadedByKey(k).ToArray();
+                if (!rows.Any(objects => Enumerable.Range(0, row.Length).All(i => row[i].Equals(objects[i]))))
+                    throw new Exception(string.Join(" ", row) + "   in    " + rows.Count());
+            }
+            sw.Stop();
+            Console.WriteLine("1000 000 GetAllReadedByKey with results comparer ok. Duration={0} cnt={1}",
+                sw.ElapsedMilliseconds, cnt);
             }
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {

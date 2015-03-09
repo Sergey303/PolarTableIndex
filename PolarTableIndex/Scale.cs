@@ -7,9 +7,9 @@ namespace PolarTableIndex
     {
         private readonly Func<object[], long> keyFromIndexRow;
         private readonly Diapason[] diapasons;
-        private readonly int minkey = int.MaxValue;
-        private readonly int maxkey = 0;
-        private double differece;
+        private readonly long minkey = long.MaxValue;
+        private readonly long maxkey = long.MinValue;
+        private long differece;
         private const int diapasonsCount = 10000;
 
         public Scale(Func<object[],long> keyFromIndexRow , PaCell indexCell)
@@ -19,9 +19,9 @@ minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get
             maxkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(indexCell.Root.Count() - 1).Get()));
             
             diapasons=new Diapason[diapasonsCount];
+            differece = (maxkey - minkey);
             FillDiapasonsNumb(indexCell);
             FillDiapasonsStart();
-            differece = (maxkey - minkey);
         }
 
         private void FillDiapasonsStart()
@@ -45,7 +45,10 @@ minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get
             var t = (diapasons.Length - 1)*diffX;
             var d = (t/differece);
             var i = (int) d;
-
+            if (i < 0)
+            {
+                
+            }
             return i;
         }
 

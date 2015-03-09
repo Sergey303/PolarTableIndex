@@ -50,9 +50,7 @@ namespace PolarTableIndex
             {
                 if (q == typeof (string)) isUsed = false;
             }
-            this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
-            if (index_cell.IsEmpty) return;
-
+            this.index_cell = new PaCell(tp_index, indexName + ".pac", false);     
             if (isHalf)
                 func4Diapasons = objects => Convert.ToInt64(objects[0]);
             else if (!isHalf && !isUsed)
@@ -64,6 +62,9 @@ namespace PolarTableIndex
                 };
             else
                func4Diapasons=objects => Convert.ToInt64((objects)[0]);
+            if (index_cell.IsEmpty) return;
+
+            
             scale = new Scale(func4Diapasons, index_cell);
         }
 
@@ -214,7 +215,7 @@ namespace PolarTableIndex
         {
             if (useScale)
             {
-                Diapason d = scale.Search(Convert.ToInt64(key));
+                Diapason d = scale.Search( Convert.ToInt64((int) (isHalf ? (object)halfProducer(key) : key)));
                 return GetAllByKey(d.start, d.numb, key);
             }
             return GetAllByKey(0, index_cell.Root.Count(), key);
@@ -224,7 +225,7 @@ namespace PolarTableIndex
         {
             if (useScale)
             {
-                Diapason d = scale.Search(Convert.ToInt64(key));
+                Diapason d = scale.Search(Convert.ToInt64((int)(isHalf ? (object)halfProducer(key) : key)));
                 return GetAllReadedByKey(d.start, d.numb, key);
             }
             return GetAllReadedByKey(0, index_cell.Root.Count(), key);
