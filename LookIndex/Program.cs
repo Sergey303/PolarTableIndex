@@ -119,7 +119,9 @@ namespace LookIndex
             table.Fill(new object[0]);
             for (int i = 0; i < maxCount; i++)
             {
-                table.Root.AppendElement(new object[] {false, i.ToString(), i == maxCount/2 ? -1 : i});
+                
+              //  table.Root.AppendElement(new object[] {false, i.ToString(), i == maxCount/2 ? -1 : i});
+                table.Root.AppendElement(new object[] { false, rnd.Next().ToString(), rnd.Next() });
             }
 
             table.Flush();
