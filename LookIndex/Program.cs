@@ -32,10 +32,10 @@ namespace LookIndex
             Console.WriteLine("start string halfkey=GetHashCode index_withScale");
             IIndex<string> index;
 
-            index = new IndexWithScale<string>(path + "index_withScale1", table.Root, en => (string) en[1],
-                key => key.GetHashCode(), true);
-            if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
-            RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+            //index = new IndexWithScale<string>(path + "index_withScale1", table.Root, en => (string) en[1],
+            //    key => key.GetHashCode(), true);
+            //if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
+            //RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
             Console.WriteLine("start string key index_withScale");
             index = new IndexWithScale<string>(path + "index_withScale2", table.Root, en => (string)en[1],

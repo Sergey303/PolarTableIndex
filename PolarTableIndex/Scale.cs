@@ -15,7 +15,7 @@ namespace PolarTableIndex
         public Scale(Func<object[],long> keyFromIndexRow , PaCell indexCell)
         {
             this.keyFromIndexRow = keyFromIndexRow;
-minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get()));
+            minkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(0).Get()));
             maxkey = Convert.ToInt32(keyFromIndexRow((object[])indexCell.Root.Element(indexCell.Root.Count() - 1).Get()));
             
             diapasons=new Diapason[diapasonsCount];
