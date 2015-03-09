@@ -50,22 +50,25 @@ namespace PolarTableIndex
             {
                 if (q == typeof (string)) isUsed = false;
             }
-            this.index_cell = new PaCell(tp_index, indexName + ".pac", false);     
-            if (isHalf)
-                func4Diapasons = objects => Convert.ToInt64(objects[0]);
-            else if (!isHalf && !isUsed)
-                func4Diapasons = objects =>
-                {
-                    long off = (long) (objects[1]);
-                    ptr.offset = off;
-                    return Convert.ToInt64(keyProducer((object[]) ptr.Get()));
-                };
-            else
-               func4Diapasons=objects => Convert.ToInt64((objects)[0]);
-            if (index_cell.IsEmpty) return;
+            this.index_cell = new PaCell(tp_index, indexName + ".pac", false);
+            if (useScale)
+            {
+                if (isHalf)
+                    func4Diapasons = objects => Convert.ToInt64(objects[0]);
+                else if (!isHalf && !isUsed)  throw new NotImplementedException();
+                    //func4Diapasons = objects =>
+                    //{
+                    //    long off = (long) (objects[1]);
+                    //    ptr.offset = off;
+                    //    return Convert.ToInt64(keyProducer((object[]) ptr.Get()));
+                    //};
+                else
+                    func4Diapasons = objects => Convert.ToInt64((objects)[0]);
+                if (index_cell.IsEmpty) return;
 
-            
-            scale = new Scale(func4Diapasons, index_cell);
+
+                scale = new Scale(func4Diapasons, index_cell);
+            }
         }
 
         public class HalfPair : IComparable, IComparer<Tkey>
@@ -213,7 +216,7 @@ namespace PolarTableIndex
 
         public IEnumerable<PaEntry> GetAllByKey(Tkey key)
         {
-            if (useScale)
+            if (useScale && isUsed)
             {
                 Diapason d = scale.Search( Convert.ToInt64((int) (isHalf ? (object)halfProducer(key) : key)));
                 return GetAllByKey(d.start, d.numb, key);
@@ -223,15 +226,13 @@ namespace PolarTableIndex
 
         public IEnumerable<object[]> GetAllReadedByKey(Tkey key)
         {
-            if (useScale)
+           
+            if (useScale && isUsed)
             {
                 Diapason d = scale.Search(Convert.ToInt64(isHalf ? (object)halfProducer(key) : key));
 
                 var allReadedByKey = GetAllReadedByKey(d.start, d.numb, key).ToArray();
-                if (allReadedByKey.Length == 0)
-                {
-                    
-                }
+              
                 return allReadedByKey;
             }
             return GetAllReadedByKey(0, index_cell.Root.Count(), key);
