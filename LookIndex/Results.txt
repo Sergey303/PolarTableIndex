@@ -12,5 +12,9 @@
 INT== GoIndex.Index<int>(path + "a_index", table.Root,  en => (int)en.Field(2).Get(), null /*key => key.GetHashCode()*/);
 Индексирование 14129
 1000 GetAllByKey INT 162
+== HalfKeyForIndex
+Загрузка 784
+Индексирование 6041
+1000 GetAllByKey 169
 
 
