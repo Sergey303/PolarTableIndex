@@ -32,13 +32,13 @@ namespace LookIndex
             Console.WriteLine("start string halfkey=GetHashCode GoIndex");
             IIndex<string> index_s = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode());
             if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
-            if (build) { sw.Restart(); index_s.Build3(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+            if (build) { sw.Restart(); index_s.Build3(); sw.Stop(); Console.WriteLine("biuld3 " + sw.ElapsedMilliseconds); }
             RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
           
            Console.WriteLine("start string key GoIndex");
            index_s = new GoIndex.Index<string>(path + "n_index2", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
-           if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+           if (build) { sw.Restart(); index_s.Build3(); sw.Stop(); Console.WriteLine("biuld3 " + sw.ElapsedMilliseconds); }
            if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
            RunTest<string>(index_s, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
@@ -56,7 +56,7 @@ namespace LookIndex
 
             Console.WriteLine("start int key GoIndex");
            IIndex<int> index = new GoIndex.Index<int>(path + "n_index_ints1", table.Root, en => (int)en.Field(2).Get(), null /* key => key.GetHashCode()*/);
-           if (build) { sw.Restart(); index_s.Build2(); sw.Stop(); Console.WriteLine("biuld2 " + sw.ElapsedMilliseconds); }
+           if (build) { sw.Restart(); index_s.Build3(); sw.Stop(); Console.WriteLine("biuld3 " + sw.ElapsedMilliseconds); }
            if (build) { sw.Restart(); index_s.Build(); sw.Stop(); Console.WriteLine("biuld " + sw.ElapsedMilliseconds); }
          
             RunTest(index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
