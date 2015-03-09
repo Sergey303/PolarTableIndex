@@ -34,10 +34,10 @@ namespace LookIndex
            if (build) index_s.Build();
         //   RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
 
-           Console.WriteLine("start string half key IndexWithScale");
-          index_s = new PolarTableIndex.IndexWithScale<string>(path + "n_index with scale", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode(), true);
-          if (build) index_s.Build();
-           RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
+          // Console.WriteLine("start string half key IndexWithScale");
+          //index_s = new PolarTableIndex.IndexWithScale<string>(path + "n_index with scale", table.Root, en => (string)en.Field(1).Get(), key => key.GetHashCode(), true);
+          //if (build) index_s.Build();
+          // RunTest(index_s, row => (string)row[1], "16780", () => rnd.Next(maxCount * 2).ToString()); //(maxCount / 2).ToString(),
             //Console.WriteLine("start string half key HalfKeyForIndex InsideRecursive");
             //index_s = new PolarTableIndex.HalfKeyForIndex<string, int>(row => row[1].ToString(), s => s.GetHashCode(), PolarTableIndex.IndexConstructor.CreateInsideRecursive(path + "strings", table.Root, row => row[1].ToString().GetHashCode(), row => (bool)row[0] != true));// Index<string>(path + "n_index", table.Root, en => (string)en.Field(1).Get(), null /* key => key.GetHashCode()*/);
             //index_s.Build();
