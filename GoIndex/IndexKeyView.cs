@@ -131,16 +131,22 @@ namespace GoIndex
         {
             if (index_cell.IsEmpty || index_cell.Root.Count() == 0) return;
             diapasons = new Diapason[N];
-            ToPosition = (int key) => { return (int)(((long)key - (long)min) * (long)(N-1) / ((long)max - (long)min)); };
+            ToPosition = (int key) => (int)(((long)key - min) * (long)(N-1) / (max - min));
             index_cell.Root.Scan((long off, object val) =>
             {
                 object[] pair = (object[])val;
                 int position = ToPosition((int)pair[0]);
                 // Предполагаю, что начальная разметка диапазона - нули
-                if (diapasons[position].start == 0L) diapasons[position].start = off;
+               // if (diapasons[position].start == 0L) diapasons[position].start = off;
                 diapasons[position].numb += 1;
                 return true;
             });
+            long sum = 0;
+            for (int i = 0; i < N; i++)
+            {
+                diapasons[i].start = sum;
+                sum += diapasons[i].numb;
+            }
         }
    
 

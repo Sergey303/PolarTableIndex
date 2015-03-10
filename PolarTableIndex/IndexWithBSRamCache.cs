@@ -20,6 +20,7 @@ namespace PolarTableIndex
         private int[] bsRamCache=new int[10000];
         private Func<object[], long> func4Diapasons;
         private PaEntry ptr;
+        private long diapasonLength;
 
         /// <summary>
         /// Конструктор ключевого индекса
@@ -154,7 +155,7 @@ namespace PolarTableIndex
             }
             int ii = 0;
             int k = bsRamCache.Length - 1;
-            long diapasonLength = index_cell.Root.Count()/k;
+            diapasonLength = index_cell.Root.Count()/k;
             int j = 0;
             index_cell.Root.Scan((offset, o) =>
             {
@@ -235,8 +236,12 @@ namespace PolarTableIndex
         {
             if (useScale && isUsed)
             {
-                Diapason d = Array.BinarySearch().Search( Convert.ToInt64((int) (isHalf ? (object)halfProducer(key) : key)));
-                return GetAllByKey(d.start, d.numb, key);
+               //int i= SearchInBSRamChace(Convert.ToInt32(key));
+               // if(i==-1) return null 
+               // if(diapasonLength*(i+1)>Count()      )
+               //     return GetAllByKey(i*dia, d.numb, key);
+                
+               // return GetAllByKey(di, d.numb, key);
             }
             return GetAllByKey(0, index_cell.Root.Count(), key);
         }
@@ -246,9 +251,10 @@ namespace PolarTableIndex
            
             if (useScale && isUsed)
             {
-                Diapason d = scale.Search(Convert.ToInt64(isHalf ? (object)halfProducer(key) : key));
 
-                var allReadedByKey = GetAllReadedByKey(d.start, d.numb, key).ToArray();
+
+                throw new NotImplementedException();
+                var allReadedByKey = GetAllReadedByKey(0, 0, key).ToArray();
               
                 return allReadedByKey;
             }
@@ -263,7 +269,7 @@ namespace PolarTableIndex
 
         public long Count()
         {
-            throw new NotImplementedException();
+          return  index_cell.Root.Count();
         }
 
         public void Build2()
