@@ -86,8 +86,8 @@ namespace GoIndex
                 var key = keyProducer(row);    
                 //var key_hkey = isHalf ? (object) halfProducer(key) : (isUsed ? (object) key : (object) (-1));
                 int key_hkey = isHalf ? (int)halfProducer(key) : (isUsed ? Convert.ToInt32(key) : (-1));
-                //if (key_hkey < min) min = key_hkey;
-                //if (key_hkey > max) max = key_hkey;
+                if (key_hkey < min) min = key_hkey;
+                if (key_hkey > max) max = key_hkey;
                 object[] i_element = new object[] { key_hkey, offset };
                 index_cell.Root.AppendElement(i_element);
                 return true;
@@ -127,20 +127,21 @@ namespace GoIndex
 
           
             
-            if (isUsed) BuildScale(100);
+            if (isUsed) BuildScale(10000);
         }
        private Func<int, int> ToPosition = null;
         public void BuildScale(int N)
         {
             if (index_cell.IsEmpty || index_cell.Root.Count() == 0) return;
 
-            var maxElement = index_cell.Root.Element(index_cell.Root.Count() - 1);
-            var max_key = keyProducer((object[])maxElement.Get());
-            max = isHalf ? (int)halfProducer(max_key) : (isUsed ? Convert.ToInt32(max_key) : (-1));
+            // Вторые строчки - ошибочные. Ключ вычисляется на элементах опорной последовательности или (иногда) берется из первого поля индексной последовательности
+            //var maxElement = index_cell.Root.Element(index_cell.Root.Count() - 1);
+            //var max_key = keyProducer((object[])maxElement.Get());
+            //max = isHalf ? (int)halfProducer(max_key) : (isUsed ? Convert.ToInt32(max_key) : (-1));
 
-            var minElement = index_cell.Root.Element(0);
-            var min_key = keyProducer((object[])minElement.Get());
-            min = isHalf ? (int)halfProducer(min_key) : (isUsed ? Convert.ToInt32(min_key) : (-1));
+            //var minElement = index_cell.Root.Element(0);
+            //var min_key = keyProducer((object[])minElement.Get());
+            //min = isHalf ? (int)halfProducer(min_key) : (isUsed ? Convert.ToInt32(min_key) : (-1));
 
             diapasons = new Diapason[N];
             ToPosition = (int key) => (int)(((long)key - min) * (long)(N-1) / (max - min));
