@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HalfKeyIndex.cs" />
+    <Compile Include="IndexWithBSRamCache.cs" />
     <Compile Include="IndexWithScale.cs" />
     <Compile Include="PaEntryRowsByOffsets.cs" />
     <Compile Include="Class2PolarType.cs" />
