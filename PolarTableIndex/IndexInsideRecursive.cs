@@ -228,6 +228,7 @@ namespace PolarTableIndex
                     indexInsideRecursive);                                                
             }
         }
+        public void BuildScale(int N) { }
 
         public new void Clear()
         {

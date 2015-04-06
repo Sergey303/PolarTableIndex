@@ -21,29 +21,42 @@ namespace LookIndex
         {
             sw = new Stopwatch();
             string path = "../../../Databases/";
-            int maxCount = 100000000;
-            bool build = true;
-            table = CreatePaCell(path, sw,  maxCount);
-            sw.Stop();
-            Console.WriteLine("Load ok. Duration={0}", sw.ElapsedMilliseconds);
-
+            // Открытие или персвичное создание опорной последовательности
+            table = new PaCell(new PTypeSequence(new PTypeRecord(
+                new NamedType("deleted", new PType(PTypeEnumeration.boolean)),
+                new NamedType("name", new PType(PTypeEnumeration.sstring)),
+                new NamedType("age", new PType(PTypeEnumeration.integer)))),
+                path + "table.pac", false);
+            Console.WriteLine("Start: Проверка индексов: строка, строка с полуключем, целое");
             sw.Restart();
 
-            Console.WriteLine("Проверка индексов: строка, строка с полуключем, целое");
+            int maxCount = 100000000;
+            bool build = false;
+            if (build)
+            {
+                table = CreatePaCell(path, sw, maxCount);
+                sw.Stop();
+                Console.WriteLine("Load ok. Duration={0}", sw.ElapsedMilliseconds);
+
+                sw.Restart();
+            }
+
             IIndex<string> index;
 
-            index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], null);
-            if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("build " + sw.ElapsedMilliseconds); }
-            RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
+            //index = new GoIndex.Index<string>(path + "n_index", table.Root, en => (string)en[1], null);
+            //if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("build " + sw.ElapsedMilliseconds); }
+            //RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
             index = new GoIndex.Index<string>(path + "n_index_h", table.Root, en => (string)en[1], key => key.GetHashCode());
             if (build) { sw.Restart(); index.Build(); sw.Stop(); Console.WriteLine("build " + sw.ElapsedMilliseconds); }
+            index.BuildScale(1000000);
             RunTest<string>((IIndex<string>)index, row => row[1].ToString(), (maxCount / 2).ToString(), () => rnd.Next(maxCount * 2).ToString());
 
             IIndex<int> i_index;
             
             i_index = new GoIndex.Index<int>(path + "i_index", table.Root, en => (int)en[2], null);
             if (build) { sw.Restart(); i_index.Build(); sw.Stop(); Console.WriteLine("build " + sw.ElapsedMilliseconds); }
+            i_index.BuildScale(1000000);
             RunTest<int>((IIndex<int>)i_index, row => (int)row[2], (maxCount / 2), () => rnd.Next(maxCount * 2));
 
         }
@@ -83,15 +96,6 @@ namespace LookIndex
             }
         private static PaCell CreatePaCell(string path, Stopwatch sw, int maxCount)
         {
-            PaCell table;
-
-            table = new PaCell(new PTypeSequence(new PTypeRecord(
-                new NamedType("deleted", new PType(PTypeEnumeration.boolean)),
-                new NamedType("name", new PType(PTypeEnumeration.sstring)),
-                new NamedType("age", new PType(PTypeEnumeration.integer)))),
-                path + "table.pac", false);
-            Console.WriteLine("Start");
-            sw.Restart();
             table.Clear();
             table.Fill(new object[0]);
             for (int i = 0; i < maxCount; i++)

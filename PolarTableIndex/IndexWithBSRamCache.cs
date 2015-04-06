@@ -166,6 +166,7 @@ namespace PolarTableIndex
             });
 
         }
+        public void BuildScale(int N) { }
 
 
            public void Warmup()

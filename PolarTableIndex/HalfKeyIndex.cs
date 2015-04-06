@@ -23,6 +23,7 @@ namespace PolarTableIndex
         {
            subIndex.Build();
         }
+        public void BuildScale(int N) { }
 
         public void Warmup()
         {

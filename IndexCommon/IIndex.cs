@@ -8,6 +8,7 @@ namespace IndexCommon
     public interface IIndex<Tkey>
     {
         void Build();
+        void BuildScale(int n);
         void Warmup();
         IEnumerable<PaEntry> GetAllByKey(long start, long number, Tkey key);
         IEnumerable<object[]> GetAllReadedByKey(long start, long number, Tkey key);

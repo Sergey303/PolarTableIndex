@@ -155,6 +155,7 @@ namespace PolarTableIndex
             scale = new Scale(func4Diapasons, index_cell);
 
         }
+        public void BuildScale(int N) { }
 
 
            public void Warmup()

@@ -125,23 +125,19 @@ namespace GoIndex
                 });
             }
 
-          
-            
-            if (isUsed) BuildScale(10000);
+            //if (isUsed) BuildScale(10000);
         }
        private Func<int, int> ToPosition = null;
         public void BuildScale(int N)
         {
             if (index_cell.IsEmpty || index_cell.Root.Count() == 0) return;
-
-            // Вторые строчки - ошибочные. Ключ вычисляется на элементах опорной последовательности или (иногда) берется из первого поля индексной последовательности
-            //var maxElement = index_cell.Root.Element(index_cell.Root.Count() - 1);
-            //var max_key = keyProducer((object[])maxElement.Get());
-            //max = isHalf ? (int)halfProducer(max_key) : (isUsed ? Convert.ToInt32(max_key) : (-1));
-
-            //var minElement = index_cell.Root.Element(0);
-            //var min_key = keyProducer((object[])minElement.Get());
-            //min = isHalf ? (int)halfProducer(min_key) : (isUsed ? Convert.ToInt32(min_key) : (-1));
+            // Если минимальное и максимальное не вычислены
+            if (min == long.MaxValue || max == long.MinValue)
+            {
+                //Берем первый и последний ключ/полуключ
+                min = (int)index_cell.Root.Element(0).Field(0).Get();
+                max = (int)index_cell.Root.Element(index_cell.Root.Count() - 1).Field(0).Get();
+            }
 
             diapasons = new Diapason[N];
             ToPosition = (int key) => (int)(((long)key - min) * (long)(N-1) / (max - min));
@@ -235,10 +231,13 @@ namespace GoIndex
             if (isUsed)
             {
                 int key_hkey = isHalf ? (int)halfProducer(key) : Convert.ToInt32(key);
-                int pos = ToPosition(key_hkey);
-                if (pos < 0 || pos >= diapasons.Length) return Enumerable.Empty<PaEntry>();
-                start = diapasons[pos].start;
-                number = diapasons[pos].numb;
+                if (ToPosition != null && diapasons != null)
+                {
+                    int pos = ToPosition(key_hkey);
+                    if (pos < 0 || pos >= diapasons.Length) return Enumerable.Empty<PaEntry>();
+                    start = diapasons[pos].start;
+                    number = diapasons[pos].numb;
+                }
                 if (number == 0L) return Enumerable.Empty<PaEntry>();
             }
             return GetAllByKey(start, number, key);
@@ -251,10 +250,13 @@ namespace GoIndex
            if (isUsed)
            {
                int key_hkey = isHalf ? (int)halfProducer(key) : Convert.ToInt32(key);
-               int pos = ToPosition(key_hkey);
-               if (pos < 0 || pos >= diapasons.Length) return Enumerable.Empty<object[]>();
-               start = diapasons[pos].start;
-               number = diapasons[pos].numb;
+               if (ToPosition != null && diapasons != null)
+               {
+                   int pos = ToPosition(key_hkey);
+                   if (pos < 0 || pos >= diapasons.Length) return Enumerable.Empty<object[]>();
+                   start = diapasons[pos].start;
+                   number = diapasons[pos].numb;
+               }
                if (number == 0L) return Enumerable.Empty<object[]>();
            }
            return GetAllReadedByKey(start, number, key);
