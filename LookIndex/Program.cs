@@ -14,14 +14,14 @@ namespace LookIndex
     {
         private static PaCell table;
         private static Stopwatch sw;
-        private static Random rnd = new Random(7777);
+        private static Random rnd = new Random();
 
 
         public static void Main()
         {
             sw = new Stopwatch();
             string path = "../../../Databases/";
-            int maxCount = 1000000;
+            int maxCount = 100000000;
             bool build = true;
             table = CreatePaCell(path, sw,  maxCount);
             sw.Stop();
