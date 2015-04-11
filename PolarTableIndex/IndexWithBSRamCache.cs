@@ -225,8 +225,10 @@ namespace PolarTableIndex
                 .Where(en => (bool)en[0] != true);
         }
 
-        int SearchInBSRamChace(int key)
+        int SearchInBSRamChace(int searched)
         {
+            int readed = bsRamCache[0];
+           
             while (true)
             {
                 

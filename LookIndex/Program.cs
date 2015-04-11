@@ -105,7 +105,7 @@ namespace LookIndex
             return table;
         }
 
-        public static object Index { get; set; }
+      
     }
 }
 
