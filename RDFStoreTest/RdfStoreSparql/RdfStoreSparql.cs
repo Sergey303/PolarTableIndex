@@ -6,11 +6,11 @@ using SparqlParseRun.SparqlClasses.Query.Result;
 
 public class RdfStoreSparql
 {
-    public RDFStoreStringsQuads store;
+    public RDFStoreQuadsCoded store;
 
     public RdfStoreSparql()
     {
-        store = new RDFStoreStringsQuads();   
+        store =new RDFStoreQuadsCoded();   
     }
 
     public SparqlResultSet ParseRunSparql(string query)
@@ -30,7 +30,7 @@ public class RdfStoreSparql
         store.FromTurtle(ttl);
                store.spogdTable.Flush();
        store.nodeGenerator. nameTable.Flush();
-    //   store.Build();
+       store.Build();
     }
 
 }

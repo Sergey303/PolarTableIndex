@@ -28,14 +28,14 @@ public class StringNodeGenerator :INodeGenerator
     private readonly SpecialTypes specialTypes=new SpecialTypes();
     protected StringNodeGenerator()
     {
-        nameTable =
-            new PaCell(new PTypeSequence(new PTypeRecord(new NamedType("code", new PType(PTypeEnumeration.integer)),
-                new NamedType("str", new PType(PTypeEnumeration.sstring)))),
-                NameTableSettings.Default.path + "nametable.pac", false);
-        if (nameTable.IsEmpty) nameTable.Fill(new object[0]);
-        indexByString = new IndexNameTable(new DirectoryInfo(NameTableSettings.Default.path + "\\nameTableIndex"),
+        //nameTable =
+        //    new PaCell(new PTypeSequence(new PTypeRecord(new NamedType("code", new PType(PTypeEnumeration.integer)),
+        //        new NamedType("str", new PType(PTypeEnumeration.sstring)))),
+        //        NameTableSettings.Default.path + "nametable.pac", false);
+        //if (nameTable.IsEmpty) nameTable.Fill(new object[0]);
+        //indexByString = new IndexNameTable(new DirectoryInfo(NameTableSettings.Default.path + "\\nameTableIndex"),
 
-            nameTable.Root, e => (string) e.Field(1).Get(), NameTableSettings.Default.Index_max_Changes_For_Rebuild);
+        //    nameTable.Root, e => (string) e.Field(1).Get(), NameTableSettings.Default.Index_max_Changes_For_Rebuild);
         nodeByWritebleObject = new Func<object, INode>[] 
         {        enm => new UriNode((string) enm), 
             enm => (bool) enm ? BoolLiteralNode.TrueNode(specialTypes.SpecialLiteralTypes_bool) : BoolLiteralNode.FalseNode(specialTypes.SpecialLiteralTypes_bool),

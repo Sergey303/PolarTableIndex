@@ -3,7 +3,8 @@ using System.IO;
 using System.Linq;
 using PolarDB;
 using RdfStoreSparqlNamespace;
-using SparqlParseRun.RdfCommon;    
+using SparqlParseRun.RdfCommon;
+using System;    
     public class RDFStoreStringsQuads  :QuadGraph, IStore  , IStoreNamedGraphs  
     {
         public PaCell spogdTable;
@@ -435,7 +436,7 @@ using SparqlParseRun.RdfCommon;
             }     
                 RemoveDeletedFromTable();
         }
-
+        int t = 0;
         public void Insert(IUriNode graph, IEnumerable<Triple> triples)
         {
             foreach (var triple in triples)
@@ -448,7 +449,13 @@ using SparqlParseRun.RdfCommon;
                 //osg.Add(nodeGenerator.Node2ComparableObject(triple.Object), (string) row[0], (string) row[3], offset);
                 //po.Add((string) row[1], nodeGenerator.Node2ComparableObject(triple.Object), offset);
                 //sg.Add((string) row[0], (string) row[3], offset);    
-            }         
+            }
+            if (t++ == 1000)
+            {
+                GC.Collect();
+                t = 0;
+            }
+ 
         }
 
 

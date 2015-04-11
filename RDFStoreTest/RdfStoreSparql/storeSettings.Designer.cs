@@ -25,7 +25,7 @@ namespace RdfStoreSparqlNamespace {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000000")]
         public int Indexes_max_Changes_For_Rebuild {
             get {
                 return ((int)(this["Indexes_max_Changes_For_Rebuild"]));

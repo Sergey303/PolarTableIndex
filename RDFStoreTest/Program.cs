@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SparqlParseRun;
+using SparqlParseRun.RdfCommon;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,11 +20,15 @@ namespace RDFStoreTest
 
             Console.WriteLine((Millions = 1)+"M");
             RdfStoreSparql ts = new RdfStoreSparql();
+            TriplesThread triplesThread = new TriplesThread((s,p,o)=>{
+                Console.WriteLine(s);
+            });
             bool load = true;
             if (load)
-            {      
+            {
                 using (StreamReader file = new StreamReader(@"C:\deployed\" + Millions + "M.ttl")) // нужен путь к файлам 1M.ttl 10M.ttl  ...
-                    ts.ReCreateFrom(file.BaseStream);
+                  ((IGraph)  triplesThread).FromTurtle(file.BaseStream);
+                    //ts.ReCreateFrom(file.BaseStream);
                 // в этом методе я закоментировал построение индексов при добавлении триплетов.
             }
             //  ts.store- объект хранилища с таблицей, индексами, поисками и добавлениями.      Есть 4 варианта    класса для этого объекта:            
@@ -30,7 +36,7 @@ namespace RDFStoreTest
             // RDFStoreStringsQuads   - этот класс сейчас используется.
 
             //  ts.store.spogdTable - таблица
-            Console.WriteLine(ts.store.spogdTable.Root.Count()+" triples");
+          //  Console.WriteLine(ts.store.spogdTable.Root.Count()+" triples");
         }
 
     }

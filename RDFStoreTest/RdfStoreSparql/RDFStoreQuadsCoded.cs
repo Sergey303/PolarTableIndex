@@ -443,15 +443,15 @@ using SparqlParseRun.RdfCommon;
             {
                 var row = new object[] { triple.Subject.GetCode(), triple.Predicate.GetCode(), nodeGenerator.Node2WritableObject(triple.Object), graphUri.GetCode(), false };
                 long offset = spogdTable.Root.AppendElement(row);
-                spog.Add((int) row[0], (int) row[1], nodeGenerator.Node2ComparableObject(triple.Object), (int) row[3], offset);
-                gop.Add((int) row[3], nodeGenerator.Node2ComparableObject(triple.Object), (int) row[1], offset);
-                pgs.Add((int) row[1], (int) row[3], (int) row[0], offset);
-                osg.Add(nodeGenerator.Node2ComparableObject(triple.Object), (int) row[0], (int) row[3], offset);
-                po.Add((int) row[1], nodeGenerator.Node2ComparableObject(triple.Object), offset);
-                sg.Add((int) row[0], (int) row[3], offset);    
+                //spog.Add((int) row[0], (int) row[1], nodeGenerator.Node2ComparableObject(triple.Object), (int) row[3], offset);
+                //gop.Add((int) row[3], nodeGenerator.Node2ComparableObject(triple.Object), (int) row[1], offset);
+                //pgs.Add((int) row[1], (int) row[3], (int) row[0], offset);
+                //osg.Add(nodeGenerator.Node2ComparableObject(triple.Object), (int) row[0], (int) row[3], offset);
+                //po.Add((int) row[1], nodeGenerator.Node2ComparableObject(triple.Object), offset);
+                //sg.Add((int) row[0], (int) row[3], offset);    
             }         
         }
-
+        
 
         public void AddGraph(IUriNode to, IGraph fromGraph)
         {
