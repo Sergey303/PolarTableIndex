@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ObjectVariant.cs" />
+    <Compile Include="ObjectVariantEnum.cs" />
     <Compile Include="ObjectVariantGen.cs" />
     <Compile Include="ObjectVariants.cs" />
     <Compile Include="VariantsTriple.cs" />

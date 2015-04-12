@@ -93,7 +93,8 @@ namespace RDFStoreTest
                         yield return new VariantsTriple()
                         {
                             subj = subject,
-                            pred = predicate, Object = 
+                            pred = predicate, 
+                            Object = 
                             lang!=null ? ObjectVariants.CreateLang(sdata,lang)  :  
                             ObjectVariants.CreateLiteralNode (sdata, datatype ?? SpecialTypes.String.FullName)         
                         };
