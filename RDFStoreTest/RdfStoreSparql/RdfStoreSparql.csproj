@@ -45,51 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodedExtensions.cs" />
-    <Compile Include="CodedPrefixedNodeGenerator.cs" />
-    <Compile Include="RDFStoreStringsQuads.cs" />
-    <Compile Include="RDFStoreStringsPrefixedQuads.cs" />
-    <Compile Include="StringNodeGenerator.cs" />
-    <Compile Include="StringPrefixedNodeGenerator.cs" />
-    <Compile Include="CodedNodeGenerator.cs" />
-    <Compile Include="RdfStoreSparql.cs" />
-    <Compile Include="ProloguePolar.cs" />
-    <Compile Include="CodedUriNode.cs" />
-    <Compile Include="ComparableObject.cs" />
-    <Compile Include="IndexByOrderedSet.cs" />
-    <Compile Include="IndexNameTable.cs" />
-    <Compile Include="NameTableSettings.Designer.cs">
-      <DependentUpon>NameTableSettings.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuardGraph.cs" />
-    <Compile Include="Row.cs" />
-    <Compile Include="RDFStoreQuadsCoded.cs" />
-    <Compile Include="storeSettings.cs" />
-    <Compile Include="storeSettings.Designer.cs">
-      <DependentUpon>storeSettings.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="NameTableSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>NameTableSettings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="storeSettings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>storeSettings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\PolarDemo\SparqlParseRun\SparqlParseRun.csproj">
-      <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
-      <Name>SparqlParseRun</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
