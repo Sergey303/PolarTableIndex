@@ -32,13 +32,13 @@ namespace RDFStoreTest
             if (load)
             {
                 timer.Restart();
-                //var query = RDFStoreTest.Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
-                var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+               var query = RDFStoreTest.Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
+               //  var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
                 VeryEasyNametable ven = new VeryEasyNametable();
                 foreach (var triple in query)
                 {
-                    int sCode = ven.InsertOne(triple.subj);
-                    int pCode = ven.InsertOne(triple.pred);
+                    int sCode = ven.InsertOne(triple.subject);
+                    int pCode = ven.InsertOne(triple.predicate);
                     if (triple.Object.Variant == ObjectVariantEnum.Iri)
                     {
                         int code = ven.InsertOne((string) (triple).Object.WritableValue);
@@ -74,14 +74,28 @@ namespace RDFStoreTest
             view = "build s " + timer.ElapsedMilliseconds + "ms.";
             File.WriteAllText("../../perfomance.txt", view);
             Console.WriteLine(view);
-            foreach (var row in spoTable.Root.Elements())
+            Console.WriteLine(spoTable.Root.Count());
+            //foreach (var element in spoTable.Root.Elements())
+            //{
+               //yt hf,jnfk  
+            //}
+            object[] rows = spoTable.Root.ElementValues().ToArray();
+            foreach (var row in rows)
             {
-                IEnumerable<object> resultsRows = sIndex.Search((int) ((object[]) row.Get())[0]);
-                if(!resultsRows.Any()) throw new Exception();
+                var rowObj = (object[]) row;
+                var resultsRows = sIndex.Search1((int) rowObj[0]).Cast<object[]>().ToArray();
+                if (!resultsRows.Any()) throw new Exception();
+                if (resultsRows.Any(o => !o[0].Equals(rowObj[0]))) throw new Exception();
+                IEnumerable<object> resultsRows1 = sIndex.Search2((int) rowObj[0], (int) rowObj[1]);
+                if (!resultsRows1.Any()) throw new Exception();
+                IEnumerable<object> resultsRows2 = sIndex.Search3((int) rowObj[0], (int) rowObj[1],
+                    ObjectVariantsEx.Writeble2Comparable((object[]) rowObj[2]));
+                if (!resultsRows2.Any()) throw new Exception();
             }
-        }
-
+        } 
     }
+
+   
     public class VeryEasyNametable
     {
         private readonly Dictionary<string, int> dic = new Dictionary<string, int>();

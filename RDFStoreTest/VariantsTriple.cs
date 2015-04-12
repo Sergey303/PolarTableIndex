@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GoStore;
-
 namespace RDFStoreTest
 {
-    public class VariantsTriple    :Triple
+    public struct VariantsTriple
     {
-        public ObjectVariants Object;
+        public readonly string subject, predicate;
+        public readonly ObjectVariants Object;
+
+        public VariantsTriple(string subject, string predicate, ObjectVariants o)
+        {
+            this.subject = subject;
+            this.predicate = predicate;
+            Object = o;
+        }
     }
 }

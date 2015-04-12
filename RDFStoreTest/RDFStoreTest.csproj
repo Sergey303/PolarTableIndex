@@ -36,9 +36,6 @@
     <Reference Include="PolarDB">
       <HintPath>..\..\PolarLearning\Resources\DLLs\PolarDB.dll</HintPath>
     </Reference>
-    <Reference Include="SparqlParseRun">
-      <HintPath>..\DLLs\SparqlParseRun.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Index.cs" />
     <Compile Include="ObjectVariantEnum.cs" />
-    <Compile Include="ObjectVariantGen.cs" />
     <Compile Include="ObjectVariants.cs" />
     <Compile Include="VariantsTriple.cs" />
     <Compile Include="Program antlr.cs" />
@@ -62,20 +58,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoStore\GoStore.csproj">
-      <Project>{859edcda-cf2d-4055-907b-632b3a7cdbe1}</Project>
-      <Name>GoStore</Name>
-    </ProjectReference>
     <ProjectReference Include="SparqlParseRun\SparqlParseRun.csproj">
       <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
       <Name>SparqlParseRun</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\Antlr4.Runtime.net45.dll" />
-    <Content Include="bin\Debug\SparqlParseRun.dll" />
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="bin\Debug\" />
     <Folder Include="Database\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
