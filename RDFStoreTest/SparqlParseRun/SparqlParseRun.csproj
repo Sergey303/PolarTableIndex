@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.props" Condition="Exists('..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.props')" />
   <Import Project="..\packages\Antlr4.4.3.0\build\Antlr4.props" Condition="Exists('..\packages\Antlr4.4.3.0\build\Antlr4.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -15,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\PolarTableIndex\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>687d6ec7</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>b3faa057</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +38,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="obj\Debug\sparq11lTranslatorBaseListener.cs" />
+    <Compile Include="obj\Debug\sparq11lTranslatorBaseVisitor.cs" />
+    <Compile Include="obj\Debug\sparq11lTranslatorLexer.cs" />
+    <Compile Include="obj\Debug\sparq11lTranslatorListener.cs" />
+    <Compile Include="obj\Debug\sparq11lTranslatorParser.cs" />
+    <Compile Include="obj\Debug\sparq11lTranslatorVisitor.cs" />
     <Compile Include="obj\Debug\TtlGrammarBaseListener.cs" />
     <Compile Include="obj\Debug\TtlGrammarBaseVisitor.cs" />
     <Compile Include="obj\Debug\TtlGrammarLexer.cs" />
@@ -199,12 +204,6 @@
     <Compile Include="SparqlClasses\GraphPattern\SparqlServicePattern.cs" />
     <Compile Include="SparqlClasses\Expressions\SparqlSubstringExpression.cs" />
     <Compile Include="SparqlClasses\GraphPattern\Triples\Node\SparqlUnDefinedNode.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorBaseListener.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorBaseVisitor.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorLexer.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorListener.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorParser.cs" />
-    <Compile Include="obj\Debug\sparq11lTranslatorVisitor.cs" />
     <Compile Include="SparqlClasses\Expressions\SparqlBoolLiteralExpression.cs" />
     <Compile Include="SparqlClasses\Expressions\SparqlContains.cs" />
     <Compile Include="SparqlClasses\Expressions\SparqlEncodeForUri.cs" />
@@ -252,21 +251,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Antlr4 Include="TtlGrammar_fullstr.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
-    </Antlr4>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
+    <AntlrTokens Include="obj\Debug\sparq11lTranslator.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun.obj.Debug</CustomToolNamespace>
+    </AntlrTokens>
+    <AntlrTokens Include="obj\Debug\sparq11lTranslatorLexer.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun.obj.Debug</CustomToolNamespace>
+    </AntlrTokens>
+    <AntlrTokens Include="obj\Debug\TtlGrammarLexer.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun.obj.Debug</CustomToolNamespace>
+    </AntlrTokens>
+    <AntlrTokens Include="obj\Debug\TtlGrammar_fullstr.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun.obj.Debug</CustomToolNamespace>
+    </AntlrTokens>
+    <AntlrTokens Include="obj\Debug\TtlGrammar_fullstrLexer.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun.obj.Debug</CustomToolNamespace>
+    </AntlrTokens>
     <None Include="packages.config" />
-    <Antlr4 Include="sparq11lTranslator.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
-    </Antlr4>
-    <Antlr4 Include="TtlGrammar.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
-    </Antlr4>
     <None Include="XmlSchema.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>XmlSchema.Designer.cs</LastGenOutput>
@@ -289,16 +296,23 @@
     <Content Include="bin\Debug\Antlr4.Runtime.net45.dll" />
     <Content Include="bin\Debug\PolarDB.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Antlr4 Include="sparq11lTranslator.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
+    </Antlr4>
+    <Antlr4 Include="TtlGrammar.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
+    </Antlr4>
+    <Antlr4 Include="TtlGrammar_fullstr.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>SparqlParseRun</CustomToolNamespace>
+    </Antlr4>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.props'))" />
-    <Error Condition="!Exists('..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.targets'))" />
-  </Target>
-  <Import Project="..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.targets" Condition="Exists('..\..\PolarTableIndex\packages\Antlr4.4.3.0\build\Antlr4.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
