@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SparqlParseRun" GeneratedClassName="XmlSchema">
+  <Profiles />
+  <Settings>
+    <Setting Name="Integer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">integer</Value>
+    </Setting>
+    <Setting Name="Float" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">float</Value>
+    </Setting>
+    <Setting Name="Double" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">double</Value>
+    </Setting>
+    <Setting Name="Decimal" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">decimal</Value>
+    </Setting>
+    <Setting Name="Bool" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">boolean</Value>
+    </Setting>
+    <Setting Name="Date" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">date</Value>
+    </Setting>
+    <Setting Name="DateTime" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">datetime</Value>
+    </Setting>
+    <Setting Name="LangString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">langstring</Value>
+    </Setting>
+    <Setting Name="String" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">string</Value>
+    </Setting>
+    <Setting Name="DayTimeDuration" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">daytimeduration</Value>
+    </Setting>
+    <Setting Name="xmlSchemaNs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://www.w3.org/2001/xmlschema#</Value>
+    </Setting>
+    <Setting Name="xmlSchemaPrefix" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">rdfs:</Value>
+    </Setting>
+    <Setting Name="rdf_syntax_ns" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://www.w3.org/1999/02/22-rdf-syntax-ns#</Value>
+    </Setting>
+    <Setting Name="type" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">type</Value>
+    </Setting>
+    <Setting Name="simple_literal" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://simpleliteral</Value>
+    </Setting>
+    <Setting Name="nil" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">nil</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
