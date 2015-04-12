@@ -56,6 +56,7 @@
     <Compile Include="obj\Debug\TtlGrammar_fullstrListener.cs" />
     <Compile Include="obj\Debug\TtlGrammar_fullstrParser.cs" />
     <Compile Include="obj\Debug\TtlGrammar_fullstrVisitor.cs" />
+    <Compile Include="RdfCommon\ObjectVariant.cs" />
     <Compile Include="RdfCommon\PrologueFullString.cs" />
     <Compile Include="RdfCommon\NodeGeneratorFullString.cs" />
     <Compile Include="TurtleParser full strings thead.cs" />

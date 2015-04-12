@@ -50,13 +50,13 @@ namespace SparqlParseRun.RdfCommon
             {
                 DateTime date;
                 if(!DateTime.TryParse(p, out date)) throw new ArgumentException(p);
-                return new ObjectVariant(10, date);
+                return new ObjectVariant(10, date.Ticks);
             }
             else if (typeUriNode == SpecialTypes.DateTime.FullName)
             {
                 DateTimeOffset date;
                 if (!DateTimeOffset.TryParse(p, out date)) throw new ArgumentException(p);
-                return new ObjectVariant(9, date);
+                return new ObjectVariant(9, date.Ticks);
             }
             else if (typeUriNode == (SpecialTypes.Bool.FullName))
             {
@@ -92,7 +92,7 @@ namespace SparqlParseRun.RdfCommon
             {
                 TimeSpan i;
                 if (!TimeSpan.TryParse(p, out i)) throw new ArgumentException(p);
-                return new ObjectVariant(11,i);
+                return new ObjectVariant(11, i.Ticks);
             }
             else 
             return new ObjectVariant(12, new object[]{p, typeUriNode});   
@@ -114,25 +114,3 @@ namespace SparqlParseRun.RdfCommon
     }
     
 }
-
-    public struct ObjectVariant
-    {
-        private readonly int tag;
-        private readonly object content;
-
-        public ObjectVariant(int tag, object content)
-        {
-            this.tag = tag;
-            this.content = content;
-        }
-
-        public object Content
-        {
-            get { return content; }
-        }
-
-        public int Tag
-        {
-            get { return tag; }
-        }
-    }

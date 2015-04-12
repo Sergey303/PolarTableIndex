@@ -6,7 +6,7 @@ namespace SparqlParseRun.RdfCommon
 {
     public class PrologueFullString
     {
-        public Dictionary<string, string> namspace2Prefix = new Dictionary<string, string>();
+        //public Dictionary<string, string> namspace2Prefix = new Dictionary<string, string>();
         public Dictionary<string, string> prefix2Namspace = new Dictionary<string, string>();
           
         public static Regex PrefixNSSlpit = new Regex("^([^:]*:)(.*)$");
@@ -93,15 +93,15 @@ namespace SparqlParseRun.RdfCommon
         {
             ns = ns.Substring(1, ns.Length - 2);
             prefix2Namspace.Add(prefix, ns);
-            namspace2Prefix.Add(ns, prefix);
+           // namspace2Prefix.Add(ns, prefix);
         }
 
-        public UriPrefixed SetThisPrefix(UriPrefixed uri)
-        {
-            string existsPrefix;
-            if (namspace2Prefix.TryGetValue(uri.Namespace, out existsPrefix))
-                uri.Prefix = existsPrefix;
-            return uri;
-        }
+        //public UriPrefixed SetThisPrefix(UriPrefixed uri)
+        //{
+        //    string existsPrefix;
+        //    if (namspace2Prefix.TryGetValue(uri.Namespace, out existsPrefix))
+        //        uri.Prefix = existsPrefix;
+        //    return uri;
+        //}
     }
 }
