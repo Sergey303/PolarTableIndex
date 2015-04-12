@@ -1,5 +1,5 @@
 grammar TtlGrammar_fullstr;
-
+	 rewrite=false;
 @header{
 	using System;
 	using System.Linq;
