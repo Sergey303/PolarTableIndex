@@ -21,7 +21,7 @@ namespace RDFStoreTest
             bool load = true;
             if (load)
             {
-                using (StreamReader file = new StreamReader(@"C:\deployed\" + Millions + "M.ttl")) // нужен путь к файлам 1M.ttl 10M.ttl  ...
+                using (StreamReader file = new StreamReader(@"D:\home\FactographDatabases\dataset\dataset" + Millions + "M.ttl")) // нужен путь к файлам 1M.ttl 10M.ttl  ...
                     TurtleParserFullstringsThread.TurtleThread(file.BaseStream,(s, p, o) =>
                     {
                         if (o.Tag == 0)

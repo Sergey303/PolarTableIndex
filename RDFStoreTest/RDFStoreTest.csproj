@@ -55,10 +55,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="RdfStoreSparql\RdfStoreSparql.csproj">
-      <Project>{efff68e5-319d-49f8-a7c5-92b04d30e3b1}</Project>
-      <Name>RdfStoreSparql</Name>
-    </ProjectReference>
     <ProjectReference Include="SparqlParseRun\SparqlParseRun.csproj">
       <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
       <Name>SparqlParseRun</Name>
