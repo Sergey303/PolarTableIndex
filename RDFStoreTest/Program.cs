@@ -26,8 +26,8 @@ namespace RDFStoreTest
             if (load)
             {
                 timer.Restart();
-                var query = RDFStoreTest.Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
-                //var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+                //var query = RDFStoreTest.Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
+                var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
                 VeryEasyNametable ven = new VeryEasyNametable();
                 foreach (var triple in query)
                 {
