@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using PolarDB;
 
 namespace RDFStoreTest
@@ -15,14 +16,19 @@ namespace RDFStoreTest
             Console.WriteLine("Start RDFStoreTest.");
             string path = "../../../Databases/";
             PaCell spoTable =
-                new PaCell(new PTypeSequence(new PTypeRecord(new NamedType("s", new PType(PTypeEnumeration.sstring)),
-                    new NamedType("p", new PType(PTypeEnumeration.sstring)),
+                new PaCell(new PTypeSequence(
+                    new PTypeRecord(new NamedType("s", new PType(PTypeEnumeration.integer)),
+                    //new PTypeRecord(new NamedType("s", new PType(PTypeEnumeration.sstring)),
+                    new NamedType("p", 
+                        new PType(PTypeEnumeration.integer)),
+                        //new PType(PTypeEnumeration.sstring)),
                     new NamedType("o", ObjectVariantsPolarType.ObjectVariantPolarType))),
                     path + @"spo full strings.pac", false);
             spoTable.Clear();
             spoTable.Fill(new object[0]);
             Stopwatch timer = new Stopwatch();
             bool load = true;
+            string view;
             if (load)
             {
                 timer.Restart();
@@ -31,12 +37,13 @@ namespace RDFStoreTest
                 VeryEasyNametable ven = new VeryEasyNametable();
                 foreach (var triple in query)
                 {
-                    ven.InsertOne(triple.subj);
-                    ven.InsertOne(triple.pred);
+                    int sCode = ven.InsertOne(triple.subj);
+                    int pCode = ven.InsertOne(triple.pred);
                     if (triple.Object.Variant == ObjectVariantEnum.Iri)
                     {
                         int code = ven.InsertOne((string) (triple).Object.WritableValue);
-                        spoTable.Root.AppendElement(new object[] {triple.subj, triple.pred, new OV_iriint(code).ToWritable()});
+                        //spoTable.Root.AppendElement(new object[] {triple.subj, triple.pred, new OV_iriint(code).ToWritable()});
+                        spoTable.Root.AppendElement(new object[] {sCode, pCode, new OV_iriint(code).ToWritable()});
                     }
                     else if (triple.Object.Variant == ObjectVariantEnum.Other)
                     {
@@ -44,20 +51,33 @@ namespace RDFStoreTest
                         int code = ven.InsertOne(ovTyped.turi);
                         var ovTypedint = new OV_typedint(ovTyped.value, code);
                         var writable = ovTypedint.ToWritable();
-                        spoTable.Root.AppendElement(new object[]
-                        {triple.subj, triple.pred, writable});
+                        spoTable.Root.AppendElement(new object[]    {sCode, pCode, writable});
+                        //spoTable.Root.AppendElement(new object[]    {triple.subj, triple.pred, writable});
                     }
                     else
                     {
-                        spoTable.Root.AppendElement(new object[] {triple.subj, triple.pred, triple.Object.ToWritable()});
+                        spoTable.Root.AppendElement(new object[] {sCode, pCode, triple.Object.ToWritable()});
+                       // spoTable.Root.AppendElement(new object[] {triple.subj, triple.pred, triple.Object.ToWritable()});
                     }
                 }
                 timer.Stop();
-                var view = "load " + spoTable.Root.Count() + " " + timer.ElapsedMilliseconds + "ms.";
+                view = "load " + spoTable.Root.Count() + " " + timer.ElapsedMilliseconds + "ms.";
                 File.WriteAllText("../../perfomance.txt", view);
                 Console.WriteLine(view);
                 Console.WriteLine("Load ok. count={0}", ven.Count());
 
+            }
+            timer.Restart();
+            Index sIndex=new Index(path,"s.pac", spoTable.Root);
+            sIndex.Build();
+            timer.Stop();
+            view = "build s " + timer.ElapsedMilliseconds + "ms.";
+            File.WriteAllText("../../perfomance.txt", view);
+            Console.WriteLine(view);
+            foreach (var row in spoTable.Root.Elements())
+            {
+                IEnumerable<object> resultsRows = sIndex.Search((int) ((object[]) row.Get())[0]);
+                if(!resultsRows.Any()) throw new Exception();
             }
         }
 
