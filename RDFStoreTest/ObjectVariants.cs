@@ -338,7 +338,7 @@ namespace RDFStoreTest
 
         public override object WritableValue
         {
-            get { return value; }
+            get { return value.Ticks; }
         }
 
     }
@@ -358,7 +358,7 @@ namespace RDFStoreTest
 
         public override object WritableValue
         {
-            get { return value; }
+            get { return value.ToBinary(); }
         }
 
 
@@ -379,7 +379,7 @@ namespace RDFStoreTest
 
         public override object WritableValue
         {
-            get { return value; }
+            get { return value.ToBinary(); }
         }
 
     }
@@ -399,7 +399,7 @@ namespace RDFStoreTest
 
         public override object WritableValue
         {
-            get { return value; }
+            get { return value.ToFileTime(); }
         }
 
     }

@@ -8,7 +8,8 @@ namespace GoStore
 {
     public abstract class Triple
     {
-        public string subj, pred;
+        public string subj;
+        public string pred;
     }
     public class OTriple : Triple
     {
