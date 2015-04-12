@@ -47,5 +47,31 @@ namespace GoStore
         {
             return dic.Count;
         }
+
+        private void Dummy()
+        {
+//new PTypeUnion(
+//                new NamedType("uri", new PType(PTypeEnumeration.sstring)),
+//                new NamedType("bool", new PType(PTypeEnumeration.boolean)),
+//                new NamedType("str", new PType(PTypeEnumeration.sstring)),
+//                new NamedType("str", new PType(PTypeEnumeration.sstring)),
+//                new NamedType("lang str", 
+//                    new PTypeRecord(
+//                        new NamedType("str", new PType(PTypeEnumeration.sstring)), 
+//                        new NamedType("lang", new PType(PTypeEnumeration.sstring)))),
+//                new NamedType("double", new PType(PTypeEnumeration.real)),
+//                new NamedType("decimal", new PType(PTypeEnumeration.real)),
+//                new NamedType("float", new PType(PTypeEnumeration.real)),
+//                new NamedType("int", new PType(PTypeEnumeration.integer)),
+//                new NamedType("date time offset", new PType(PTypeEnumeration.longinteger)),
+//                new NamedType("date time", new PType(PTypeEnumeration.longinteger)),
+//                new NamedType("time", new PType(PTypeEnumeration.longinteger)),
+//                new NamedType("typed", 
+//                    new PTypeRecord(
+//                        new NamedType("str", new PType(PTypeEnumeration.sstring)), 
+//                        new NamedType("type", new PType(PTypeEnumeration.sstring)))))        
+        }
     }
+
+
 }
