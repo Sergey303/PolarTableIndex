@@ -11,6 +11,9 @@ namespace GoStore
         public static void Main()
         {
             Console.WriteLine("Start GoStore.");
+            string path = "../../../Databases/";
+            var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+            Console.WriteLine("Load ok. ntriples={0}", query.Count());
         }
     }
 }

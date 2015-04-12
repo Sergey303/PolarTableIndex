@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace GoStore
 {
-    public abstract class TripleInt
+    public class Turtle
     {
-    }
-    public class TurtleInt
-    {
-        // (Только для специальных целей) Это для накапливания идентификаторов собираемых сущностей:
-        public static List<string> sarr = new List<string>();
-
-        public static IEnumerable<TripleInt> LoadGraph(string datafile)//EngineVirtuoso engine, string graph, string datafile)
+        public static IEnumerable<Triple> LoadGraph(string datafile)//EngineVirtuoso engine, string graph, string datafile)
         {
             int ntriples = 0;
             string subject = null;
@@ -95,10 +89,10 @@ namespace GoStore
                                 datatype = GetEntityString(namespaces, qname);
                             }
                         }
-                        yield return new DTripleInt()
+                        yield return new DTriple()
                         {
-                            subject = TripleInt.Code(subject),
-                            predicate = TripleInt.Code(predicate),
+                            subj = subject,
+                            pred = predicate,
                             data = // d
                                 datatype == "http://www.w3.org/2001/XMLSchema#integer" ?
                                     new Literal() { vid = LiteralVidEnumeration.integer, value = int.Parse(sdata) } :
@@ -112,18 +106,11 @@ namespace GoStore
                     { // entity
                         entity = rest_line[0] == '<' ? rest_line.Substring(1, rest_line.Length - 2) : GetEntityString(namespaces, rest_line);
 
-                        // (Только для специальных целей) Накапливание:
-                        if (predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" &&
-                            entity == "http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Product")
+                        yield return new OTriple()
                         {
-                            sarr.Add(subject);
-                        }
-
-                        yield return new OTripleInt()
-                        {
-                            subject = TripleInt.Code(subject),
-                            predicate = TripleInt.Code(predicate),
-                            obj = TripleInt.Code(entity)
+                            subj = subject,
+                            pred = predicate,
+                            obj = entity
                         };
                     }
                     ntriples++;
