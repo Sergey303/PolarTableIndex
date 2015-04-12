@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Index.cs" />
+    <Compile Include="Nametable.cs" />
     <Compile Include="ObjectVariantEnum.cs" />
     <Compile Include="ObjectVariantGen.cs" />
     <Compile Include="ObjectVariants.cs" />
