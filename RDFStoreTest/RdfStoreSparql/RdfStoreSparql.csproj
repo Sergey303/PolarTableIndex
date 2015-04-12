@@ -36,9 +36,6 @@
     <Reference Include="PolarDB">
       <HintPath>..\..\PolarDB\bin\Debug\PolarDB.dll</HintPath>
     </Reference>
-    <Reference Include="SparqlParseRun">
-      <HintPath>..\..\PolarDemo\SparqlParseRun\bin\Debug\SparqlParseRun.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -87,6 +84,12 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>storeSettings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\PolarDemo\SparqlParseRun\SparqlParseRun.csproj">
+      <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
+      <Name>SparqlParseRun</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

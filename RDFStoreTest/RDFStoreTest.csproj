@@ -40,9 +40,6 @@
     <Reference Include="PolarDB">
       <HintPath>..\..\PolarLearning\Resources\DLLs\PolarDB.dll</HintPath>
     </Reference>
-    <Reference Include="SparqlParseRun">
-      <HintPath>C:\Users\Lena\AppData\Roaming\Skype\My Skype Received Files\SparqlParseRun.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,6 +57,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PolarDemo\SparqlParseRun\SparqlParseRun.csproj">
+      <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
+      <Name>SparqlParseRun</Name>
+    </ProjectReference>
     <ProjectReference Include="RdfStoreSparql\RdfStoreSparql.csproj">
       <Project>{efff68e5-319d-49f8-a7c5-92b04d30e3b1}</Project>
       <Name>RdfStoreSparql</Name>
@@ -67,8 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\Antlr4.Runtime.net45.dll" />
-    <Content Include="bin\Debug\PolarDB.dll" />
-    <Content Include="bin\Debug\SparqlParseRun.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
