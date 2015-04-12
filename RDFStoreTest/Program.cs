@@ -1,59 +1,57 @@
-﻿using PolarDB;
-using SparqlParseRun;
-using SparqlParseRun.RdfCommon;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RDFStoreTest
 {
-    class Program
+    public class Program
     {
-        private static int Millions = 1;
-        static void Main(string[] args)
+        public static int Millions = 1;
+        public static void Main()
         {
-         
-            Console.WriteLine((Millions = 1)+"M");
-           PaCell spoTable=new PaCell(new PTypeSequence(new PTypeRecord(new NamedType("s", new PType(PTypeEnumeration.sstring)),
-               new NamedType("p", new PType(PTypeEnumeration.sstring)),
-               new NamedType("o", new PTypeUnion(
-                   new NamedType("uri", new PType(PTypeEnumeration.sstring)),
-                new NamedType("bool", new PType(PTypeEnumeration.boolean)),
-                new NamedType("str", new PType(PTypeEnumeration.sstring)),
-                new NamedType("str", new PType(PTypeEnumeration.sstring)),
-                new NamedType("lang str", new PTypeRecord(new NamedType("str", new PType(PTypeEnumeration.sstring)), new NamedType("lang", new PType(PTypeEnumeration.sstring)))),
-                new NamedType("double", new PType(PTypeEnumeration.real)),
-                new NamedType("decimal", new PType(PTypeEnumeration.real)),
-                new NamedType("float", new PType(PTypeEnumeration.real)),
-                new NamedType("int", new PType(PTypeEnumeration.integer)),
-                new NamedType("date time offset", new PType(PTypeEnumeration.longinteger)),
-                new NamedType("date time", new PType(PTypeEnumeration.longinteger)),
-                new NamedType("time", new PType(PTypeEnumeration.longinteger)),
-                new NamedType("typed", new PTypeRecord(new NamedType("str", new PType(PTypeEnumeration.sstring)), new NamedType("type", new PType(PTypeEnumeration.sstring)))))))),
-            "../../Database/spo full strings.pac", false);
-            spoTable.Clear();
-            spoTable.Fill(new object[0]);
-                          Stopwatch timer=new Stopwatch(); 
-            bool load = true;
-            if (load)
+            Console.WriteLine("Start RDFStoreTest.");
+            string path = "../../../Databases/";
+                
+            var query = RDFStoreTest.Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
+            //var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+            VeryEasyNametable ven = new VeryEasyNametable();
+            foreach (var triple in query)
             {
-                timer.Restart();
-                using (StreamReader file = new StreamReader(@"C:\deployed\" + Millions + "M.ttl")) // нужен путь к файлам 1M.ttl 10M.ttl  ...
-                    TurtleParserFullstringsThread.TurtleThread(file.BaseStream,(s, p, o) =>
-                    {
-                       // spoTable.Root.AppendElement(new object []{s, p, o.AsArray});
-                    });
-                timer.Stop();
-                var view = "load "+spoTable.Root.Count()+" "+timer.ElapsedMilliseconds+"ms.";
-                File.WriteAllText("../../perfomance.txt",view);
-                Console.WriteLine(view);
+                ven.InsertOne(triple.subj);
+                ven.InsertOne(triple.pred);
+                if (triple .Object.Variant==ObjectVariantEnum.Iri) ven.InsertOne((string) (triple).Object.WritableValue);
+                else if (triple .Object.Variant==ObjectVariantEnum.Other)
+                {
+                    ven.InsertOne(((OV_typed) triple.Object).turi);
+                }
+
             }
-         
+            
+            Console.WriteLine("Load ok. count={0}", ven.Count());
+
         }
 
+    }
+    public class VeryEasyNametable
+    {
+        private readonly Dictionary<string, int> dic = new Dictionary<string, int>();
+        private int nextcode = 0;
+        public int InsertOne(string id)
+        {
+            int c;
+            if (dic.TryGetValue(id, out c)) return c;
+            c = nextcode;
+            nextcode++;
+            dic.Add(id, c);
+            return c;
+        }
+        public Func<string, int> GetCodeByString;
+        public VeryEasyNametable()
+        {
+            GetCodeByString = (string id) => dic[id];
+        }
+        public int Count()
+        {
+            return dic.Count;
+        }
     }
 }

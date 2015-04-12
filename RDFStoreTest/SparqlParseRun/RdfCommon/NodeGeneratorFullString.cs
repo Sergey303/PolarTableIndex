@@ -27,12 +27,12 @@ namespace SparqlParseRun.RdfCommon
 
         public ObjectVariant CreateLiteralNode(decimal p)
         {
-            return new ObjectVariant(6, p);//SimpleLiteralNode
+            return new ObjectVariant(6, p);//decimal
         }
 
         public ObjectVariant CreateLiteralNode(double p)
         {
-            return new ObjectVariant(5, p);//SimpleLiteralNode
+            return new ObjectVariant(5, p);//double
         }
 
         public ObjectVariant CreateLiteralNode(bool p)
@@ -100,10 +100,10 @@ namespace SparqlParseRun.RdfCommon
 
         public string CreateBlankNode(string graph, string blankNodeString = null)
         {
-            if (graph != null) blankNodeString = graph + "/" + blankNodeString;
             if(blankNodeString==null)
                 blankNodeString = "blank" + (long)(random.NextDouble() * 1000 * 1000 * 1000 * 1000);
 
+            if (graph != null) blankNodeString = graph + "/" + blankNodeString;
           
             return blankNodeString;
         }

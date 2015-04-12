@@ -48,13 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObjectVariant.cs" />
+    <Compile Include="ObjectVariantGen.cs" />
+    <Compile Include="ObjectVariants.cs" />
+    <Compile Include="VariantsTriple.cs" />
+    <Compile Include="Program antlr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Turtle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GoStore\GoStore.csproj">
+      <Project>{859edcda-cf2d-4055-907b-632b3a7cdbe1}</Project>
+      <Name>GoStore</Name>
+    </ProjectReference>
     <ProjectReference Include="SparqlParseRun\SparqlParseRun.csproj">
       <Project>{ae8cbedb-a66e-4705-953e-c16793426e89}</Project>
       <Name>SparqlParseRun</Name>

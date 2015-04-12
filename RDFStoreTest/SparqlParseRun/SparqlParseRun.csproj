@@ -276,7 +276,7 @@
     </AntlrTokens>
     <None Include="packages.config" />
     <None Include="XmlSchema.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>XmlSchema.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
