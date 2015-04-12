@@ -20,14 +20,23 @@ namespace RDFStoreTest
 
             Console.WriteLine((Millions = 1)+"M");
             RdfStoreSparql ts = new RdfStoreSparql();
-            TriplesThread triplesThread = new TriplesThread((s,p,o)=>{
-                Console.WriteLine(s);
-            });
+         
             bool load = true;
             if (load)
             {
                 using (StreamReader file = new StreamReader(@"C:\deployed\" + Millions + "M.ttl")) // нужен путь к файлам 1M.ttl 10M.ttl  ...
-                  ((IGraph)  triplesThread).FromTurtle(file.BaseStream);
+                    TurtleParserFullstringsThread.TurtleThread(file.BaseStream,(s, p, o) =>
+                    {
+                        if (o.Tag == 0)
+                        {
+                            var iri = ((string)o.Content);
+                        }
+                        else if(o.Tag==12)
+                        {
+                            var typedLiteralType = ((object[])o.Content)[1];
+                          //  Console.WriteLine(typedLiteralType);
+                        }
+                    }); 
                     //ts.ReCreateFrom(file.BaseStream);
                 // в этом методе я закоментировал построение индексов при добавлении триплетов.
             }
