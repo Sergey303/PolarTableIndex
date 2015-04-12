@@ -14,7 +14,7 @@ private readonly PrologueFullString prologue = new PrologueFullString();
 
 }	
 
- 	turtleDoc	[Action<string, string, ObjectVariant> ft] : {foreachTriple=ft; }	statement*								   ;
+ 	turtleDoc	[Action<string, string, ObjectVariant> ft, string graphName] : {foreachTriple=ft; this.graphName=graphName; }	statement*								   ;
 	statement	:	directive | triples '.'						;
 	directive	:	prefixID | base | sparqlPrefix | sparqlBase	  ;
 	prefixID	:	'@prefix' PNAME_NS IRIREF '.'	{ prologue.AddPrefix($PNAME_NS.text, $IRIREF.text); }			  ;
@@ -59,9 +59,9 @@ private readonly PrologueFullString prologue = new PrologueFullString();
  | ( string '^^' iri { $value=ng.CreateLiteralNode($string.text, $iri.value);} ) ;  
 	  booleanLiteral returns [ObjectVariant value]
  :  boolean {$value=ng.CreateLiteralNode($boolean.value); } ;
- boolean returns [bool value]
- :  'true' { $value=true; } 
- |	'false' { $value=false; } ;	  
+ boolean 
+ :  'true' { return true; } 
+ |	'false' { return false; } ;	  
 	string	:	STRING_LITERAL_QUOTE | STRING_LITERAL_SINGLE_QUOTE | STRING_LITERAL_LONG_SINGLE_QUOTE | STRING_LITERAL_LONG_QUOTE  ;
 	 iri returns [string value] :/* iriString { $value=$iriString.value;};	iriString returns [string value] : */
 	IRIREF {$value=prologue.GetFromIri($IRIREF.text.Substring(1, $IRIREF.text.Length-2));} |	PNAME_LN {$value=prologue.GetUriFromPrefixed($PNAME_LN.text); } | PNAME_NS {$value=prologue.GetUriFromPrefixedNamespace($PNAME_NS.text); };
