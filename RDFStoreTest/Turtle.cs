@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using GoStore;
-using SparqlParseRun;
 using SparqlParseRun.RdfCommon;
-using Triple = GoStore.Triple;
 
 namespace RDFStoreTest
 {
@@ -90,25 +87,17 @@ namespace RDFStoreTest
                                 datatype = GetEntityString(namespaces, qname);
                             }
                         }
-                        yield return new VariantsTriple()
-                        {
-                            subj = subject,
-                            pred = predicate, 
-                            Object = 
-                            lang!=null ? ObjectVariants.CreateLang(sdata,lang)  :  
-                            ObjectVariants.CreateLiteralNode (sdata, datatype ?? SpecialTypes.String.FullName)         
-                        };
+                        yield return new VariantsTriple(subject, predicate,
+                            lang != null
+                                ? ObjectVariants.CreateLang(sdata, lang)
+                                : ObjectVariants.CreateLiteralNode(sdata, datatype ?? SpecialTypes.String.FullName));
+                    
                     }
                     else
                     { // entity
                         entity = rest_line[0] == '<' ? rest_line.Substring(1, rest_line.Length - 2) : GetEntityString(namespaces, rest_line);
 
-                        yield return new VariantsTriple()
-                        {
-                            subj = subject,
-                            pred = predicate,
-                            Object = new OV_iri(entity)
-                        };
+                        yield return new VariantsTriple(subject, predicate, new OV_iri(entity));
                     }
                     ntriples++;
                 }
