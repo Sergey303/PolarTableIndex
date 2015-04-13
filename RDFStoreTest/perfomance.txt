@@ -1,1 +1,1 @@
-build s 2999ms.
+build index spo 3919ms.

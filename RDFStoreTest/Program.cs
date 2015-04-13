@@ -112,7 +112,8 @@ namespace RDFStoreTest
                     });
 
                 // Основной процесс: триплеты складываются в буфер, а их uri добавляются в HashSet
-                var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+                var query = Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
+                //var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
                 foreach (var triple in query)
                 {
                     hs.Add(triple.subject);
@@ -138,7 +139,7 @@ namespace RDFStoreTest
             Index sIndex=new Index(path,"s.pac", spoTable.Root);
             sIndex.Build();
             timer.Stop();
-            view = "build s " + timer.ElapsedMilliseconds + "ms.";
+            view = "build index spo " + timer.ElapsedMilliseconds + "ms.";
             File.WriteAllText("../../perfomance.txt", view);
             Console.WriteLine(view);
             Console.WriteLine(spoTable.Root.Count());
@@ -146,18 +147,29 @@ namespace RDFStoreTest
             //{
                //yt hf,jnfk  
             //}
-            object[] rows = spoTable.Root.ElementValues().ToArray();
-            foreach (var row in rows)
+            object[][] rows = spoTable.Root.ElementValues().Cast<object[]>().ToArray();
+            Dictionary<int, int> subjectsCounts = rows.Select(row => (int)row[0]).GroupBy(i => i).ToDictionary(ints => ints.Key, ints => ints.Count());
+            var subjectsPredicatesCounts = rows.Select(row => new KeyValuePair<int, int> ((int)row[0], (int) row[1])).GroupBy(sp => sp).ToDictionary(ints => ints.Key, ints => ints.Count());
+            for (int i = 0; i < rows.Length; i++)
             {
-                var rowObj = (object[]) row;
-                var resultsRows = sIndex.Search1((int) rowObj[0]).Cast<object[]>().ToArray();
-                if (!resultsRows.Any()) throw new Exception();
-                if (resultsRows.Any(o => !o[0].Equals(rowObj[0]))) throw new Exception();
-                IEnumerable<object> resultsRows1 = sIndex.Search2((int) rowObj[0], (int) rowObj[1]);
-                if (!resultsRows1.Any()) throw new Exception();
-                IEnumerable<object> resultsRows2 = sIndex.Search3((int) rowObj[0], (int) rowObj[1],
-                    ObjectVariantsEx.Writeble2Comparable((object[]) rowObj[2]));
-                if (!resultsRows2.Any()) throw new Exception();
+                var rowObj = rows[i];
+                var searchSubj = (int) rowObj[0];
+                var resultsRows = sIndex.Search1(searchSubj).Cast<object[]>().ToArray();
+                if (resultsRows.Any(o => !o[0].Equals(rowObj[0]))) throw new Exception("среди найденных есть неправильный");
+                if(subjectsCounts[searchSubj]!=resultsRows.Length) throw new Exception("число найденных не совпадает с числом нужных.");
+                
+                var searchPredicate = (int) rowObj[1];
+                var resultsRows1 = sIndex.Search2(searchSubj, searchPredicate).Cast<object[]>().ToArray();
+                if (resultsRows1.Any(row => !Equals(row[0], searchSubj) || !row[1].Equals(searchPredicate))) throw new Exception("среди найденных есть неправильный");
+                if (subjectsPredicatesCounts[new KeyValuePair<int, int>(searchSubj, searchPredicate)] != resultsRows1.Length) throw new Exception("число найденных не совпадает с числом нужных.");
+                
+                IComparable searchObj = ObjectVariantsEx.Writeble2Comparable((object[]) rowObj[2]);
+                var resultsRows2 = sIndex.Search3(searchSubj, searchPredicate, searchObj).Cast<Object[]>().ToArray();
+                if (resultsRows2.Length!=1) throw new Exception();
+                if (!resultsRows2[0][0].Equals(searchSubj)) throw new Exception();
+                if (!resultsRows2[0][1].Equals(searchPredicate)) throw new Exception();
+                if (ObjectVariantsEx.Writeble2Comparable((object[]) resultsRows2[0][2]).CompareTo(searchObj)!=0) throw new Exception();
+                Console.WriteLine("test rows rest: "+(rows.Length-i));
             }
         } 
     }
