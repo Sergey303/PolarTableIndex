@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Express 2012 for Web
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolarTableIndex", "PolarTableIndex.csproj", "{38F8BAB9-82D2-41C6-B3CE-0C59702DE440}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoIndex", "..\GoIndex\GoIndex.csproj", "{FD503ABD-D15E-46E4-8B26-70A7FF6359C8}"
@@ -10,6 +8,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LookIndex", "..\LookIndex\LookIndex.csproj", "{29CB2DDF-7E7A-41DA-B911-9C639DE6112F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndexCommon", "..\IndexCommon\IndexCommon.csproj", "{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IterationIndex", "..\IterationIndex\IterationIndex.csproj", "{86E5C257-A5EC-45CA-8E4C-D57A6B2ADFFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDFStoreTest", "..\RDFStoreTest\RDFStoreTest.csproj", "{948FE0B5-B6B7-441B-A747-2F895824BC06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdfStoreSparql", "..\RDFStoreTest\RdfStoreSparql\RdfStoreSparql.csproj", "{EFFF68E5-319D-49F8-A7C5-92B04D30E3B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoStore", "..\GoStore\GoStore.csproj", "{859EDCDA-CF2D-4055-907B-632B3A7CDBE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparqlParseRun", "..\RDFStoreTest\SparqlParseRun\SparqlParseRun.csproj", "{AE8CBEDB-A66E-4705-953E-C16793426E89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task15UniversalIndex", "..\Task15UniversalIndex\Task15UniversalIndex.csproj", "{E4AB7A63-7B55-43E9-B1AA-C8E0F8AA87E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +43,30 @@ Global
 		{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D66C15F2-941E-41D3-A847-4E3FAEEBD62A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E5C257-A5EC-45CA-8E4C-D57A6B2ADFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E5C257-A5EC-45CA-8E4C-D57A6B2ADFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E5C257-A5EC-45CA-8E4C-D57A6B2ADFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E5C257-A5EC-45CA-8E4C-D57A6B2ADFFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948FE0B5-B6B7-441B-A747-2F895824BC06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948FE0B5-B6B7-441B-A747-2F895824BC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948FE0B5-B6B7-441B-A747-2F895824BC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948FE0B5-B6B7-441B-A747-2F895824BC06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFFF68E5-319D-49F8-A7C5-92B04D30E3B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFF68E5-319D-49F8-A7C5-92B04D30E3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFF68E5-319D-49F8-A7C5-92B04D30E3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFF68E5-319D-49F8-A7C5-92B04D30E3B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859EDCDA-CF2D-4055-907B-632B3A7CDBE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859EDCDA-CF2D-4055-907B-632B3A7CDBE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859EDCDA-CF2D-4055-907B-632B3A7CDBE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859EDCDA-CF2D-4055-907B-632B3A7CDBE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE8CBEDB-A66E-4705-953E-C16793426E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8CBEDB-A66E-4705-953E-C16793426E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8CBEDB-A66E-4705-953E-C16793426E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8CBEDB-A66E-4705-953E-C16793426E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4AB7A63-7B55-43E9-B1AA-C8E0F8AA87E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4AB7A63-7B55-43E9-B1AA-C8E0F8AA87E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4AB7A63-7B55-43E9-B1AA-C8E0F8AA87E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4AB7A63-7B55-43E9-B1AA-C8E0F8AA87E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
