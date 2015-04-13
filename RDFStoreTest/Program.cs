@@ -27,7 +27,7 @@ namespace RDFStoreTest
             spoTable.Clear();
             spoTable.Fill(new object[0]);
             Stopwatch timer = new Stopwatch();
-            bool load = true;
+            bool load = false;
             string view;
             if (load)
             {
@@ -65,8 +65,75 @@ namespace RDFStoreTest
                 File.WriteAllText("../../perfomance.txt", view);
                 Console.WriteLine(view);
                 Console.WriteLine("Load ok. count={0}", ven.Count());
-
             }
+
+            // ========== Альтернативный ввод данных ===========
+            bool toload2 = true;
+            if (toload2)
+            {
+                // Формируемая таблица имен
+                NameTable nt = new NameTable("../../../Databases/");
+                // Множество идентификаторов, составляющих порцию
+                HashSet<string> hs = new HashSet<string>();
+                // Рзамер порции для буферизации
+                int nportion = 100000;
+                // Главное действующее лицо - буфер. Буферизирует обрабатываемые триплеты 
+                Polar.Common.BufferredProcessing<VariantsTriple> buffer = new Polar.Common.BufferredProcessing<VariantsTriple>(nportion,
+                    triples =>
+                    {
+                        // Массив для передаче в процедуру кодирования порции
+                        string[] arr = hs.ToArray();
+                        Array.Sort<string>(arr);
+                        nt.InsertPortion(arr);
+                        foreach (var triple in triples)
+                        {
+                            int sCode = nt.GetCodeByString(triple.subject);
+                            int pCode = nt.GetCodeByString(triple.predicate);
+                            if (triple.Object.Variant == ObjectVariantEnum.Iri)
+                            {
+                                int code = nt.GetCodeByString((string)(triple).Object.WritableValue);
+                                spoTable.Root.AppendElement(new object[] { sCode, pCode, new OV_iriint(code).ToWritable() });
+                            }
+                            else if (triple.Object.Variant == ObjectVariantEnum.Other)
+                            {
+                                var ovTyped = ((OV_typed)triple.Object);
+                                int code = nt.GetCodeByString(ovTyped.turi);
+                                var ovTypedint = new OV_typedint(ovTyped.value, code);
+                                var writable = ovTypedint.ToWritable();
+                                spoTable.Root.AppendElement(new object[] { sCode, pCode, writable });
+                            }
+                            else
+                            {
+                                spoTable.Root.AppendElement(new object[] { sCode, pCode, triple.Object.ToWritable() });
+                            }
+                        }
+                        // Обнуление HashSet
+                        hs.Clear();
+                    });
+
+                // Основной процесс: триплеты складываются в буфер, а их uri добавляются в HashSet
+                var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+                foreach (var triple in query)
+                {
+                    hs.Add(triple.subject);
+                    hs.Add(triple.predicate);
+                    if (triple.Object.Variant == ObjectVariantEnum.Iri)
+                    {
+                        hs.Add((string)(triple).Object.WritableValue);
+                    }
+                    else if (triple.Object.Variant == ObjectVariantEnum.Other)
+                    {
+                        var ovTyped = ((OV_typed)triple.Object);
+                        hs.Add(ovTyped.turi);
+                    }
+                    // Главное - запись триплета в буфер
+                    buffer.Add(triple);
+                }
+                buffer.Flush();
+                spoTable.Flush();
+            }
+
+
             timer.Restart();
             Index sIndex=new Index(path,"s.pac", spoTable.Root);
             sIndex.Build();

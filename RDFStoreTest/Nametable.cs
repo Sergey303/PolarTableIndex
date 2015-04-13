@@ -27,9 +27,19 @@ namespace RDFStoreTest
                 new NamedType("offset", new PType(PTypeEnumeration.longinteger)),
                 new NamedType("code", new PType(PTypeEnumeration.integer)))),
                 path + "index.pac", false);
+            GetCodeByString = (string id) =>
+            {
+                PaEntry entry = offsets.Root.BinarySearchFirst(ent =>
+                {
+                    string s = (string)ent.Field(1).Get();
+                    return s.CompareTo(id);
+                });
+                if (entry.IsEmpty) return -1;
+                return (int)entry.Field(0).Get();
+            };
             GetStringByCode = (int code) =>
             {
-                if (offsets.IsEmpty || code < 0 || code >= offsets.Root.Count()) throw new Exception("Unfilled data in NameTable");
+                if (index.IsEmpty || code < 0 || code >= index.Root.Count()) throw new Exception("Unfilled data in NameTable");
                 long off = (long)offsets.Root.Element(code).Get();
                 if (cssequence.IsEmpty || cssequence.Root.Count() == 0) throw new Exception("Unfilled data in NameTable");
                 PaEntry ent = cssequence.Root.Element(0);
@@ -46,15 +56,19 @@ namespace RDFStoreTest
         {
             if (cssequence.IsEmpty) throw new Exception("Unfilled data in NameTable");
             if (cssequence.Root.Count() == 0) return;
-            index.Clear(); index.Fill(new object[0]);
-            cssequence.Root.Scan((off, ob) =>
+            offsets.Clear(); offsets.Fill(new object[0]);
+            cssequence.Root.Scan(off =>
             {
-                object[] pair = (object[])ob;
-                index.Root.AppendElement(new object[] { off, (int)pair[0] });
+                offsets.Root.AppendElement(off);
                 return true;
             });
-            index.Flush();
-            index.Root.SortByKey<int>(ob => (int)((object[])ob)[1]);
+            offsets.Flush();
+            PaEntry entry = cssequence.Root.Element(0);
+            offsets.Root.SortByKey<string>(off =>
+            {
+                entry.offset = (long)off;
+                return (string)entry.Field(1).Get();
+            });
         }
         public Dictionary<string, int> InsertPortion(string[] sorted_arr)
         {

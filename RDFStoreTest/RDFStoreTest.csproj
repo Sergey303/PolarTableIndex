@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BufferredProcessing.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Nametable.cs" />
     <Compile Include="ObjectVariantEnum.cs" />
