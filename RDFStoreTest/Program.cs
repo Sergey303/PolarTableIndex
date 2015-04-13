@@ -84,20 +84,20 @@ namespace RDFStoreTest
                         // Массив для передаче в процедуру кодирования порции
                         string[] arr = hs.ToArray();
                         Array.Sort<string>(arr);
-                        nt.InsertPortion(arr);
+                        Dictionary<string, int> dd = nt.InsertPortion(arr);
                         foreach (var triple in triples)
                         {
-                            int sCode = nt.GetCodeByString(triple.subject);
-                            int pCode = nt.GetCodeByString(triple.predicate);
+                            int sCode = dd[triple.subject];
+                            int pCode = dd[triple.predicate];
                             if (triple.Object.Variant == ObjectVariantEnum.Iri)
                             {
-                                int code = nt.GetCodeByString((string)(triple).Object.WritableValue);
+                                int code = dd[(string)(triple).Object.WritableValue];
                                 spoTable.Root.AppendElement(new object[] { sCode, pCode, new OV_iriint(code).ToWritable() });
                             }
                             else if (triple.Object.Variant == ObjectVariantEnum.Other)
                             {
                                 var ovTyped = ((OV_typed)triple.Object);
-                                int code = nt.GetCodeByString(ovTyped.turi);
+                                int code = dd[ovTyped.turi];
                                 var ovTypedint = new OV_typedint(ovTyped.value, code);
                                 var writable = ovTypedint.ToWritable();
                                 spoTable.Root.AppendElement(new object[] { sCode, pCode, writable });

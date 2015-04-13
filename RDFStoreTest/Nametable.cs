@@ -27,25 +27,6 @@ namespace RDFStoreTest
                 new NamedType("offset", new PType(PTypeEnumeration.longinteger)),
                 new NamedType("code", new PType(PTypeEnumeration.integer)))),
                 path + "index.pac", false);
-            GetCodeByString = (string id) =>
-            {
-                PaEntry entry = offsets.Root.BinarySearchFirst(ent =>
-                {
-                    string s = (string)ent.Field(1).Get();
-                    return s.CompareTo(id);
-                });
-                if (entry.IsEmpty) return -1;
-                return (int)entry.Field(0).Get();
-            };
-            GetStringByCode = (int code) =>
-            {
-                if (index.IsEmpty || code < 0 || code >= index.Root.Count()) throw new Exception("Unfilled data in NameTable");
-                long off = (long)offsets.Root.Element(code).Get();
-                if (cssequence.IsEmpty || cssequence.Root.Count() == 0) throw new Exception("Unfilled data in NameTable");
-                PaEntry ent = cssequence.Root.Element(0);
-                ent.offset = off;
-                return (string)ent.Field(1).Get();
-            };
         }
         public void Clear()
         {
@@ -63,12 +44,39 @@ namespace RDFStoreTest
                 return true;
             });
             offsets.Flush();
-            PaEntry entry = cssequence.Root.Element(0);
-            offsets.Root.SortByKey<string>(off =>
+            index.Clear(); index.Fill(new object[0]);
+            cssequence.Root.Scan((off, ob) =>
             {
-                entry.offset = (long)off;
-                return (string)entry.Field(1).Get();
+                object[] pair = (object[])ob;
+                index.Root.AppendElement(new object[] { off, pair[0] });
+                return true;
             });
+            index.Flush();
+            PaEntry entry = cssequence.Root.Element(0);
+            index.Root.SortByKey<int>(ob =>
+            {
+                object[] pair = (object[])ob;
+                return (int)pair[1];
+            });
+            GetCodeByString = (string id) =>
+            {
+                PaEntry entr = index.Root.BinarySearchFirst(ent =>
+                {
+                    string s = (string)ent.Field(1).Get();
+                    return s.CompareTo(id);
+                });
+                if (entr.IsEmpty) return -1;
+                return (int)entr.Field(0).Get();
+            };
+            GetStringByCode = (int code) =>
+            {
+                if (index.IsEmpty || code < 0 || code >= index.Root.Count()) throw new Exception("Unfilled data in NameTable");
+                long off = (long)offsets.Root.Element(code).Get();
+                if (cssequence.IsEmpty || cssequence.Root.Count() == 0) throw new Exception("Unfilled data in NameTable");
+                PaEntry ent = cssequence.Root.Element(0);
+                ent.offset = off;
+                return (string)ent.Field(1).Get();
+            };
         }
         public Dictionary<string, int> InsertPortion(string[] sorted_arr)
         {
