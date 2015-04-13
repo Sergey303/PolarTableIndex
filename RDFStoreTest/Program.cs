@@ -112,8 +112,8 @@ namespace RDFStoreTest
                     });
 
                 // Основной процесс: триплеты складываются в буфер, а их uri добавляются в HashSet
-                var query = Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
-                //var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
+               //  var query = Turtle.LoadGraph(@"C:\deployed\" + Millions + "M.ttl");
+               var query = Turtle.LoadGraph(@"D:\home\FactographDatabases\dataset\dataset1M.ttl");
                 foreach (var triple in query)
                 {
                     hs.Add(triple.subject);
